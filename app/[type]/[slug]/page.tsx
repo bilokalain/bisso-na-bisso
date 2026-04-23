@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ContactButtons } from "@/components/contact-buttons";
+import { PublishedBanner } from "@/components/published-banner";
 import { getAnnonceBySlug } from "@/lib/annonces";
 import {
   CATEGORIES_EVENEMENTIEL,
@@ -17,6 +18,7 @@ import {
 
 type Props = {
   params: Promise<{ type: string; slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -51,12 +53,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function AnnonceDetailPage({ params }: Props) {
+export default async function AnnonceDetailPage({
+  params,
+  searchParams,
+}: Props) {
   const { type, slug } = await params;
   if (!isAnnonceType(type)) notFound();
   const annonce = await getAnnonceBySlug(slug);
   if (!annonce || annonce.type !== type) notFound();
 
+  const sp = await searchParams;
+  const justPublished = sp.published === "1";
   const vertical = VERTICALES[type];
   const createdFmt = new Intl.DateTimeFormat("fr-BE", {
     day: "numeric",
@@ -75,6 +82,10 @@ export default async function AnnonceDetailPage({ params }: Props) {
           {vertical.label}
         </Link>
       </nav>
+
+      {justPublished ? (
+        <PublishedBanner path={`/${type}/${slug}`} />
+      ) : null}
 
       <header className="mx-auto mt-6 max-w-4xl px-4">
         <span

@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String    @id @default(cuid())
+  nom       String
+  email     String    @unique
+  telephone String?
+  ville     String?
+  createdAt DateTime  @default(now())
+  annonces  Annonce[]
+}
+
+model Annonce {
+  id          String   @id @default(cuid())
+  type        String   // "evenementiel" | "colis" | "repetiteur"
+  titre       String
+  description String
+  ville       String?
+  photo       String?  // URL image
+  prix        Float?
+  devise      String   @default("EUR")
+
+  // Événementiel
+  categorie String? // coiffure, traiteur, dj, photo, video, decoration, salle, brasseur...
+
+  // Colis (voyage)
+  villeDepart  String?
+  villeArrivee String?
+  dateVoyage   DateTime?
+  kgDispo      Float?
+  prixParKg    Float?
+
+  // Répétiteur
+  matiere  String? // maths, francais, neerlandais, anglais, chimie, physique...
+  niveau   String? // primaire, secondaire, superieur
+  modalite String? // en_ligne, presentiel, les_deux
+
+  // Contact direct (MVP simple sans messagerie interne)
+  contactNom       String
+  contactTelephone String
+  contactEmail     String?
+
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([ville])
+  @@index([categorie])
+}

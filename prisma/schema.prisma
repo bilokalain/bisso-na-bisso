@@ -22,7 +22,7 @@ model Annonce {
   id          String   @id @default(cuid())
   type        String   // "evenementiel" | "colis" | "repetiteur"
   titre       String
-  slug        String
+  slug        String   @unique
   description String
   ville       String?
   photo       String?  // URL image

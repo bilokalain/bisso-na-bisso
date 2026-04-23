@@ -1,26 +1,88 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Palette — chaleureuse, éditoriale, pas leboncoin */
+  --color-ivory: #fbf7f0;
+  --color-ivory-deep: #f5efe3;
+  --color-sand: #efe6d6;
+  --color-ink: #111111;
+  --color-ink-muted: #6b6b6b;
+  --color-ink-subtle: #9a9a9a;
+
+  --color-forest: #1b5e3f;
+  --color-forest-deep: #123f2a;
+  --color-forest-soft: #e8efe9;
+
+  --color-terracotta: #c85a3b;
+  --color-terracotta-deep: #a44529;
+  --color-terracotta-soft: #fbe4db;
+
+  --color-gold: #d4a62a;
+
+  --color-danger: #b3261e;
+  --color-success: #2e7d32;
+
+  /* Typography */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  /* Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  /* Shadows subtiles, pas flashy */
+  --shadow-card: 0 1px 2px rgba(17, 17, 17, 0.04), 0 8px 24px rgba(17, 17, 17, 0.06);
+  --shadow-float: 0 4px 12px rgba(17, 17, 17, 0.06), 0 24px 48px rgba(17, 17, 17, 0.08);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-ivory);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Safe-area padding pour notch iOS en mode PWA */
+.safe-top {
+  padding-top: max(env(safe-area-inset-top), 0.75rem);
+}
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 0.75rem);
+}
+
+/* Focus accessible et assumé */
+:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Display utility pour titres éditoriaux */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-variation-settings: "SOFT" 50, "WONK" 0;
+  letter-spacing: -0.02em;
+}
+
+/* Empêche le zoom iOS sur focus d'un input (taille >= 16px) */
+input,
+textarea,
+select,
+button {
+  font: inherit;
+}
+input,
+textarea,
+select {
+  font-size: max(16px, 1rem);
 }

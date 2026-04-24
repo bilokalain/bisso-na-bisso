@@ -30,6 +30,8 @@ const optionalNumber = z
     return Number.isFinite(n) ? n : undefined;
   });
 
+const MAX_PHOTOS = 6;
+
 const baseShape = {
   titre: z
     .string()
@@ -42,12 +44,10 @@ const baseShape = {
     .min(20, "Décris un peu plus (20 caractères min).")
     .max(2000, "Maximum 2000 caractères."),
   ville: optionalString(60),
-  photo: z
-    .string()
-    .trim()
-    .optional()
-    .transform((v) => (v ? v : undefined))
-    .pipe(z.string().url("URL de photo invalide.").optional()),
+  photos: z
+    .array(z.string().url("URL de photo invalide."))
+    .max(MAX_PHOTOS, `${MAX_PHOTOS} photos max.`)
+    .default([]),
   prix: optionalNumber,
   contactNom: z
     .string()
@@ -158,7 +158,12 @@ export async function createAnnonce(
   }
 
   const schema = schemaFor(spec.formProfile);
-  const raw = Object.fromEntries(formData);
+  // FormData keeps duplicate keys — collect `photos` as an array before
+  // flattening everything else with Object.fromEntries.
+  const photos = formData.getAll("photos").filter(
+    (v): v is string => typeof v === "string" && v.length > 0,
+  );
+  const raw = { ...Object.fromEntries(formData), photos };
   const parsed = schema.safeParse(raw);
   if (!parsed.success) {
     const flat = z.flattenError(parsed.error);
@@ -175,7 +180,7 @@ export async function createAnnonce(
     contactNom: string;
     contactTelephone: string;
     ville?: string;
-    photo?: string;
+    photos: string[];
     prix?: number;
     contactEmail?: string;
   };
@@ -209,7 +214,7 @@ export async function createAnnonce(
       titre: data.titre,
       description: data.description,
       ville: data.ville,
-      photo: data.photo,
+      photos: data.photos,
       prix: data.prix,
       contactNom: data.contactNom,
       contactTelephone: data.contactTelephone,

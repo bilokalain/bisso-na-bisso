@@ -5,6 +5,7 @@ import {
   createAnnonce,
   type CreateAnnonceState,
 } from "@/app/actions/create-annonce";
+import { PhotoUploader } from "@/components/photo-uploader";
 import {
   CATEGORIES_EVENEMENTIEL,
   MATIERES,
@@ -118,16 +119,11 @@ export function PublierForm({ type, formProfile, color }: Props) {
         </div>
 
         <Field
-          label="Photo (URL)"
-          hint="Colle une URL d'image (Instagram, Imgur, Google Photos). L'upload direct arrive bientôt."
-          error={err.photo?.[0]}
+          label="Photos"
+          hint="6 max · 10 MB/photo · JPEG, PNG, WebP, HEIC"
+          error={err.photos?.[0]}
         >
-          <input
-            type="url"
-            name="photo"
-            className={inputCls}
-            placeholder="https://…"
-          />
+          <PhotoUploader />
         </Field>
       </Section>
 

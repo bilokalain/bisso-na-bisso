@@ -25,7 +25,7 @@ model Annonce {
   slug        String   @unique
   description String
   ville       String?
-  photo       String?  // URL image
+  photos      String[] @default([]) // Liste d'URLs (Vercel Blob) — photos[0] = principale
   prix        Float?
   devise      String   @default("EUR")
 

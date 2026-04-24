@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { AnnonceGallery } from "@/components/annonce-gallery";
 import { ContactButtons } from "@/components/contact-buttons";
 import { PublishedBanner } from "@/components/published-banner";
 import { getAnnonceBySlug } from "@/lib/annonces";
@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     annonce.description.length > 160
       ? `${annonce.description.slice(0, 157)}…`
       : annonce.description;
+  const cover = annonce.photos[0];
 
   return {
     title: annonce.titre,
@@ -38,15 +39,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: annonce.titre,
       description: descExcerpt,
       type: "article",
-      images: annonce.photo ? [{ url: annonce.photo }] : undefined,
+      images: cover ? [{ url: cover }] : undefined,
       siteName: "Bisso na Bisso",
       locale: "fr_BE",
     },
     twitter: {
-      card: annonce.photo ? "summary_large_image" : "summary",
+      card: cover ? "summary_large_image" : "summary",
       title: `${annonce.titre} — ${module.labelLong}`,
       description: descExcerpt,
-      images: annonce.photo ? [annonce.photo] : undefined,
+      images: cover ? [cover] : undefined,
     },
   };
 }
@@ -98,18 +99,9 @@ export default async function AnnonceDetailPage({
         <MetaRow annonce={annonce} formProfile={module.formProfile} />
       </header>
 
-      {annonce.photo ? (
+      {annonce.photos.length > 0 ? (
         <div className="mx-auto mt-8 max-w-4xl px-4">
-          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-sand">
-            <Image
-              src={annonce.photo}
-              alt={annonce.titre}
-              fill
-              priority
-              sizes="(min-width: 896px) 896px, 100vw"
-              className="object-cover"
-            />
-          </div>
+          <AnnonceGallery photos={annonce.photos} alt={annonce.titre} />
         </div>
       ) : null}
 

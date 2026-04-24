@@ -641,9 +641,11 @@ async function main() {
   await prisma.annonce.deleteMany({});
 
   for (const seed of SEEDS) {
+    const { photo, ...rest } = seed;
     const created = await prisma.annonce.create({
       data: {
-        ...seed,
+        ...rest,
+        photos: photo ? [photo] : [],
         slug: "__pending__",
         expiresAt: in30(60),
         contactEmail: seed.contactEmail ?? null,

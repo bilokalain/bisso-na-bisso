@@ -23,6 +23,8 @@ type Props = {
 export function AnnonceCard({ annonce, module }: Props) {
   const href = `/${module.key}/${annonce.slug}`;
   const tokens = COLOR_TOKEN[module.color];
+  const cover = annonce.photos[0];
+  const extra = annonce.photos.length - 1;
 
   return (
     <Link
@@ -30,9 +32,9 @@ export function AnnonceCard({ annonce, module }: Props) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-sand bg-ivory transition hover:-translate-y-0.5 hover:shadow-card"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-sand">
-        {annonce.photo ? (
+        {cover ? (
           <Image
-            src={annonce.photo}
+            src={cover}
             alt={annonce.titre}
             fill
             sizes="(min-width: 640px) 33vw, 100vw"
@@ -46,6 +48,11 @@ export function AnnonceCard({ annonce, module }: Props) {
         >
           {module.label}
         </span>
+        {extra > 0 ? (
+          <span className="absolute bottom-3 right-3 rounded-full bg-ink/70 px-2.5 py-1 text-[10px] font-medium text-ivory backdrop-blur-sm">
+            +{extra} photo{extra > 1 ? "s" : ""}
+          </span>
+        ) : null}
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">

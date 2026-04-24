@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ModuleIcon } from "@/components/module-icon";
 import {
@@ -31,39 +32,76 @@ function Hero() {
         }}
       />
       <div className="mx-auto max-w-6xl px-4 pb-16 pt-10 sm:pb-24 sm:pt-16 md:pt-24">
-        <span className="inline-flex items-center gap-2 rounded-full border border-sand bg-ivory px-3 py-1 text-xs font-medium uppercase tracking-wider text-ink-muted">
-          <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />
-          Diaspora · Belgique
-        </span>
-        <h1 className="mt-5 max-w-3xl font-display text-5xl font-semibold leading-[1.02] tracking-tight text-ink sm:text-6xl md:text-7xl">
-          Entre nous,{" "}
-          <span className="italic text-forest">pour nous.</span>
-        </h1>
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted sm:text-xl">
-          Les bons plans de la communauté, sans friction — événementiel,
-          restauration, colis, répétiteurs, petits boulots, et plus à venir.
-          Gratuit, sans compte, contact direct.
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          <Link
-            href="/publier"
-            className="inline-flex items-center gap-2 rounded-full bg-forest px-6 py-3 text-base font-medium text-ivory shadow-card transition hover:bg-forest-deep active:scale-[0.98]"
-          >
-            Publier une annonce
-            <ArrowRight />
-          </Link>
-          <a
-            href="#modules"
-            className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-ivory px-6 py-3 text-base font-medium text-ink transition hover:border-ink/30"
-          >
-            Parcourir
-          </a>
+        <div className="grid items-center gap-10 md:grid-cols-[1.15fr_1fr] md:gap-14">
+          <div className="order-1">
+            <span className="inline-flex items-center gap-2 rounded-full border border-sand bg-ivory px-3 py-1 text-xs font-medium uppercase tracking-wider text-ink-muted">
+              <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />
+              Diaspora · Belgique
+            </span>
+            <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] tracking-tight text-ink sm:text-6xl md:text-7xl">
+              Entre nous,{" "}
+              <span className="italic text-forest">pour nous.</span>
+            </h1>
+            {/* Hero image — on mobile it breaks here between title and body
+                copy, sitting literally "after" the H1 as requested. On
+                desktop it moves to the right column via md:hidden / md:block
+                toggles below. */}
+            <div className="mt-8 md:hidden">
+              <HeroArtwork />
+            </div>
+            <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink-muted sm:text-xl md:mt-10">
+              Les bons plans de la communauté, sans friction — événementiel,
+              restauration, colis, répétiteurs, petits boulots, et plus à
+              venir. Gratuit, sans compte, contact direct.
+            </p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href="/publier"
+                className="inline-flex items-center gap-2 rounded-full bg-forest px-6 py-3 text-base font-medium text-ivory shadow-card transition hover:bg-forest-deep active:scale-[0.98]"
+              >
+                Publier une annonce
+                <ArrowRight />
+              </Link>
+              <a
+                href="#modules"
+                className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-ivory px-6 py-3 text-base font-medium text-ink transition hover:border-ink/30"
+              >
+                Parcourir
+              </a>
+            </div>
+            <p className="mt-6 flex items-center gap-2 text-sm text-ink-muted">
+              <CheckDot /> Gratuit · Sans compte · Contact direct par WhatsApp
+            </p>
+          </div>
+          <div className="order-2 hidden md:block">
+            <HeroArtwork />
+          </div>
         </div>
-        <p className="mt-6 flex items-center gap-2 text-sm text-ink-muted">
-          <CheckDot /> Gratuit · Sans compte · Contact direct par WhatsApp
-        </p>
       </div>
     </section>
+  );
+}
+
+function HeroArtwork() {
+  return (
+    <div className="relative mx-auto w-full max-w-md">
+      {/* Soft glow behind the white-bg illustration so it blends into the
+          ivory page instead of looking like a pasted card. */}
+      <div
+        aria-hidden
+        className="absolute -inset-6 -z-10 rounded-[2rem] bg-gradient-to-br from-sand via-transparent to-ivory-deep blur-2xl"
+      />
+      <div className="relative aspect-square overflow-hidden rounded-3xl bg-white shadow-float ring-1 ring-ink/5">
+        <Image
+          src="/logo.jpeg"
+          alt="Bisso na Bisso — entre nous, tout est possible"
+          fill
+          priority
+          sizes="(min-width: 768px) 28rem, 100vw"
+          className="object-cover"
+        />
+      </div>
+    </div>
   );
 }
 

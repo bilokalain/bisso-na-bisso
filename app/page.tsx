@@ -28,7 +28,7 @@ function Hero() {
           <div className="order-1">
             <span className="inline-flex items-center gap-2 rounded-full border border-sand bg-white px-3 py-1 text-xs font-medium uppercase tracking-wider text-ink-muted">
               <span className="h-1.5 w-1.5 rounded-full bg-terracotta" />
-              Diaspora · Belgique
+              Diaspora solidaire
             </span>
             <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] tracking-tight text-ink sm:text-6xl md:text-7xl">
               Entre <span className="italic text-navy">nous.</span>

@@ -5,7 +5,7 @@ import { formatEUR } from "@/lib/baskets";
 import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
-  title: "Admin — Commandes Ndumba",
+  title: "Admin — Commandes",
   robots: { index: false, follow: false },
 };
 
@@ -51,7 +51,7 @@ export default async function AdminOrdersPage() {
             / Commandes
           </p>
           <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-            Ndumba.
+            Colis alimentaires.
           </h1>
           <p className="mt-2 text-ink-muted">
             Toutes les commandes de paniers. Tri par date, du plus récent au

@@ -104,5 +104,5 @@ export async function createOrder(
 
   revalidatePath("/admin/commandes");
   // Phase A2 will swap this for a Stripe Checkout redirect.
-  redirect(`/ndumba/commande/${order.reference}?pending=1`);
+  redirect(`/colis-alimentaires/commande/${order.reference}?pending=1`);
 }

@@ -7,13 +7,13 @@ import { formatEUR, listActiveBaskets } from "@/lib/baskets";
 import { COLOR_TOKEN, getModuleByKey } from "@/lib/modules";
 
 export const metadata: Metadata = {
-  title: "Ndumba — paniers de denrées livrés à Kinshasa",
+  title: "Colis alimentaires — denrées livrées à Kinshasa",
   description:
     "Envoie un panier de riz, farine, haricots, huile à ta famille à Kinshasa. Paie ici, on livre chez eux, photo + vidéo à l'arrivée.",
 };
 
-export default async function NdumbaIndex() {
-  const module = await getModuleByKey("ndumba");
+export default async function ColisAlimentairesIndex() {
+  const module = await getModuleByKey("colis-alimentaires");
   if (!module || module.status === "DISABLED") notFound();
   if (module.status === "COMING_SOON") redirect(`/bientot/${module.key}`);
 
@@ -31,7 +31,7 @@ export default async function NdumbaIndex() {
             className={`mt-6 inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white px-3 py-1 text-xs font-medium uppercase tracking-wider ${tokens.text}`}
           >
             <ModuleIcon name="basket" size={14} />
-            Ndumba · Kinshasa
+            Colis alimentaires · Kinshasa
           </span>
           <h1 className="mt-5 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
             Un panier à ta famille,{" "}
@@ -124,7 +124,7 @@ function BasketCard({
 }) {
   return (
     <Link
-      href={`/ndumba/${basket.slug}`}
+      href={`/colis-alimentaires/${basket.slug}`}
       className="group flex flex-col overflow-hidden rounded-2xl border border-sand bg-ivory transition hover:-translate-y-0.5 hover:shadow-card"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-sand">
@@ -143,7 +143,7 @@ function BasketCard({
           <h3 className="font-display text-2xl font-semibold tracking-tight text-ink">
             {basket.name}
           </h3>
-          <span className="whitespace-nowrap rounded-full bg-terracotta px-3 py-1 text-sm font-semibold text-ivory">
+          <span className="whitespace-nowrap rounded-full bg-clay px-3 py-1 text-sm font-semibold text-ivory">
             {formatEUR(basket.priceEUR)}
           </span>
         </div>
@@ -163,7 +163,7 @@ function BasketCard({
             </li>
           ) : null}
         </ul>
-        <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-terracotta">
+        <span className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-clay">
           Choisir ce panier →
         </span>
       </div>
@@ -174,7 +174,7 @@ function BasketCard({
 function Step({ n, title, body }: { n: string; title: string; body: string }) {
   return (
     <div>
-      <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink/15 font-display text-lg font-semibold text-terracotta">
+      <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink/15 font-display text-lg font-semibold text-clay">
         {n}
       </div>
       <h3 className="font-display text-lg font-semibold tracking-tight">
@@ -187,7 +187,7 @@ function Step({ n, title, body }: { n: string; title: string; body: string }) {
 
 function Bullet() {
   return (
-    <span className="inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />
+    <span className="inline-flex h-1.5 w-1.5 shrink-0 rounded-full bg-clay" />
   );
 }
 
@@ -202,7 +202,7 @@ function CheckMark() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-terracotta"
+      className="text-clay"
       aria-hidden
     >
       <path d="M20 6 9 17l-5-5" />

@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const basket = await getBasketBySlug(slug);
   if (!basket || !basket.active) return {};
   return {
-    title: `Panier ${basket.name} — Ndumba`,
+    title: `Panier ${basket.name} — Colis alimentaires`,
     description: `${basket.tagline} Livré à Kinshasa pour ${formatEUR(basket.priceEUR)}.`,
     openGraph: {
       title: `Panier ${basket.name} — ${formatEUR(basket.priceEUR)}`,
@@ -31,14 +31,14 @@ export default async function BasketDetailPage({ params }: Props) {
   return (
     <article className="pb-24">
       <nav className="mx-auto max-w-3xl px-4 pt-5 text-sm text-ink-muted">
-        <Link href="/ndumba" className="hover:text-ink">
+        <Link href="/colis-alimentaires" className="hover:text-ink">
           ← Tous les paniers
         </Link>
       </nav>
 
       <header className="mx-auto mt-6 max-w-3xl px-4">
-        <span className="inline-flex items-center gap-2 rounded-full bg-terracotta px-3 py-1 text-xs font-medium uppercase tracking-wider text-ivory">
-          Ndumba · Kinshasa
+        <span className="inline-flex items-center gap-2 rounded-full bg-clay px-3 py-1 text-xs font-medium uppercase tracking-wider text-ivory">
+          Colis alimentaires · Kinshasa
         </span>
         <h1 className="mt-4 font-display text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
           Panier {basket.name}
@@ -90,9 +90,9 @@ export default async function BasketDetailPage({ params }: Props) {
       </section>
 
       <section className="mx-auto mt-12 max-w-3xl px-4">
-        <div className="rounded-2xl border border-terracotta/25 bg-terracotta-soft p-5 sm:p-6">
-          <p className="text-xs font-medium uppercase tracking-wider text-terracotta-deep">
-            Ce qui rend Ndumba différent
+        <div className="rounded-2xl border border-clay/25 bg-clay-soft p-5 sm:p-6">
+          <p className="text-xs font-medium uppercase tracking-wider text-clay">
+            Ce qui rend les colis alimentaires différents
           </p>
           <ul className="mt-3 space-y-2 text-sm text-ink">
             <li className="flex items-start gap-2">
@@ -139,6 +139,6 @@ export default async function BasketDetailPage({ params }: Props) {
 
 function Dot() {
   return (
-    <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-terracotta" />
+    <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-clay" />
   );
 }

@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { formatEUR } from "@/lib/baskets";
 
 export const metadata: Metadata = {
-  title: "Ta commande — Ndumba",
+  title: "Ta commande — Colis alimentaires",
   robots: { index: false, follow: false },
 };
 
@@ -32,13 +32,13 @@ export default async function OrderDetailPage({ params, searchParams }: Props) {
   return (
     <article className="mx-auto max-w-2xl px-4 py-10 sm:py-14">
       <nav className="text-sm text-ink-muted">
-        <Link href="/ndumba" className="hover:text-ink">
-          ← Ndumba
+        <Link href="/colis-alimentaires" className="hover:text-ink">
+          ← Colis alimentaires
         </Link>
       </nav>
 
       <header className="mt-6">
-        <span className="inline-flex items-center gap-2 rounded-full bg-terracotta px-3 py-1 text-xs font-medium uppercase tracking-wider text-ivory">
+        <span className="inline-flex items-center gap-2 rounded-full bg-clay px-3 py-1 text-xs font-medium uppercase tracking-wider text-ivory">
           Commande {order.reference}
         </span>
         {justCreated ? (
@@ -76,7 +76,7 @@ export default async function OrderDetailPage({ params, searchParams }: Props) {
           <p className="font-display text-xl font-semibold tracking-tight">
             {order.basket.tagline}
           </p>
-          <p className="font-display text-2xl font-semibold text-terracotta">
+          <p className="font-display text-2xl font-semibold text-clay">
             {formatEUR(order.amountEUR)}
           </p>
         </div>

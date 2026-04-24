@@ -65,13 +65,13 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     defaultOrder: 5,
   },
   {
-    key: "ndumba",
-    label: "Ndumba",
-    labelLong: "Ndumba — paniers pour Kinshasa",
+    key: "colis-alimentaires",
+    label: "Colis alimentaires",
+    labelLong: "Colis alimentaires — pour Kinshasa",
     tagline: "Envoie un panier de denrées à ta famille. Livré chez elle.",
     description:
       "Tu choisis un panier, tu paies ici, on livre à Kinshasa. Photo + vidéo de ta famille qui le reçoit. Ton message personnel lu à la livraison.",
-    color: "terracotta",
+    color: "clay",
     iconName: "basket",
     formProfile: "standard",
     contentType: "basket",

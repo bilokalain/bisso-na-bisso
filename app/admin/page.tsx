@@ -62,12 +62,20 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
         <div className="flex flex-col items-end gap-2">
-          <Link
-            href="/admin/guides"
-            className="rounded-full border border-ink/15 bg-ivory px-4 py-2 text-sm font-medium text-ink transition hover:border-ink/30"
-          >
-            Guides →
-          </Link>
+          <div className="flex gap-2">
+            <Link
+              href="/admin/commandes"
+              className="rounded-full border border-ink/15 bg-ivory px-4 py-2 text-sm font-medium text-ink transition hover:border-ink/30"
+            >
+              Commandes →
+            </Link>
+            <Link
+              href="/admin/guides"
+              className="rounded-full border border-ink/15 bg-ivory px-4 py-2 text-sm font-medium text-ink transition hover:border-ink/30"
+            >
+              Guides →
+            </Link>
+          </div>
           <form action={logoutAdmin}>
             <button
               type="submit"

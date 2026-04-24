@@ -133,3 +133,91 @@ enum GuideStatus {
   PUBLISHED
   ARCHIVED
 }
+
+model Basket {
+  id          String       @id @default(cuid())
+  slug        String       @unique
+  name        String                          // "Panier Famille"
+  tagline     String                          // "Nourrir 5 personnes pendant 2 semaines"
+  heroImage   String?
+  destination String                          // "kinshasa" for MVP
+  priceEUR    Int                             // TTC, centimes
+  active      Boolean      @default(true)
+  order       Int          @default(0)
+  items       BasketItem[]
+  orders      Order[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([destination])
+  @@index([active])
+}
+
+model BasketItem {
+  id        String  @id @default(cuid())
+  basketId  String
+  basket    Basket  @relation(fields: [basketId], references: [id], onDelete: Cascade)
+  name      String
+  quantity  String                            // "5 kg", "4×5 L", etc.
+  order     Int     @default(0)
+
+  @@index([basketId])
+}
+
+model Order {
+  id               String        @id @default(cuid())
+  reference        String        @unique      // BNB-A4F7X2, visible côté client
+  basketId         String
+  basket           Basket        @relation(fields: [basketId], references: [id])
+
+  // Expéditeur (diaspora)
+  senderName       String
+  senderEmail      String
+  senderPhone      String?
+
+  // Destinataire (Kinshasa)
+  recipientName    String
+  recipientPhone   String
+  recipientAddress String
+  recipientNotes   String?                    // repères, indications
+
+  // Le mot lu à la livraison
+  messageToFamily  String?
+
+  // Paiement
+  amountEUR        Int
+  paymentStatus    PaymentStatus @default(PENDING)
+  stripeSessionId  String?
+
+  // Fulfillment
+  status           OrderStatus   @default(RECEIVED)
+  confirmedAt      DateTime?                  // Maman a confirmé son adresse
+  dispatchedAt     DateTime?                  // partenaire en route
+  deliveredAt      DateTime?
+  deliveryPhotoUrl String?
+  deliveryVideoUrl String?
+
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([paymentStatus])
+  @@index([status])
+  @@index([senderEmail])
+  @@index([createdAt])
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum OrderStatus {
+  RECEIVED
+  CONFIRMED
+  DISPATCHED
+  DELIVERED
+  ISSUE
+  CANCELED
+}

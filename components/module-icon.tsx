@@ -133,6 +133,18 @@ export function ModuleIcon({ name, className, size = 40 }: Props) {
           <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
         </svg>
       );
+    case "basket":
+      return (
+        <svg {...common}>
+          <path d="m5 11 4-7" />
+          <path d="m19 11-4-7" />
+          <path d="M2 11h20" />
+          <path d="m3.5 11 1.6 7.4a2 2 0 0 0 2 1.6h9.8a2 2 0 0 0 2-1.6l1.6-7.4" />
+          <path d="M12 17v-4" />
+          <path d="M8 17l-1-4" />
+          <path d="m16 17 1-4" />
+        </svg>
+      );
     default:
       return (
         <svg {...common}>

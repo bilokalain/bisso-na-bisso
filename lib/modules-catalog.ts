@@ -27,7 +27,7 @@ export type ModuleStatus = "ENABLED" | "COMING_SOON" | "DISABLED";
  * What kind of content a module holds. "annonce" = user-published ads that
  * expire. "guide" = admin-curated, evergreen editorial pieces (Infos rapides).
  */
-export type ModuleContentType = "annonce" | "guide";
+export type ModuleContentType = "annonce" | "guide" | "basket";
 
 export type ModuleSpec = {
   key: string;
@@ -63,6 +63,20 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     contentType: "guide",
     defaultStatus: "ENABLED",
     defaultOrder: 5,
+  },
+  {
+    key: "ndumba",
+    label: "Ndumba",
+    labelLong: "Ndumba — paniers pour Kinshasa",
+    tagline: "Envoie un panier de denrées à ta famille. Livré chez elle.",
+    description:
+      "Tu choisis un panier, tu paies ici, on livre à Kinshasa. Photo + vidéo de ta famille qui le reçoit. Ton message personnel lu à la livraison.",
+    color: "terracotta",
+    iconName: "basket",
+    formProfile: "standard",
+    contentType: "basket",
+    defaultStatus: "ENABLED",
+    defaultOrder: 15,
   },
   {
     key: "evenementiel",

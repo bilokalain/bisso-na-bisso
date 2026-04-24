@@ -606,6 +606,104 @@ Un **avocat en droit des étrangers** coûte entre 500 et 1500 € pour monter u
   },
 ];
 
+type BasketSeed = {
+  slug: string;
+  name: string;
+  tagline: string;
+  heroImage: string;
+  destination: string;
+  priceEUR: number;
+  order: number;
+  items: { name: string; quantity: string }[];
+};
+
+const BASKET_SEEDS: BasketSeed[] = [
+  {
+    slug: "essentiel-kinshasa",
+    name: "Essentiel",
+    tagline: "De quoi nourrir 2-3 personnes pendant une semaine.",
+    heroImage: u("1516594798947-e65505dbb29d"),
+    destination: "kinshasa",
+    priceEUR: 4500, // 45 €
+    order: 10,
+    items: [
+      { name: "Riz parfumé", quantity: "5 kg" },
+      { name: "Farine de blé", quantity: "5 kg" },
+      { name: "Huile végétale", quantity: "2×1 L" },
+      { name: "Sucre", quantity: "2 kg" },
+      { name: "Sel", quantity: "1 kg" },
+    ],
+  },
+  {
+    slug: "famille-kinshasa",
+    name: "Famille",
+    tagline: "5 personnes, 2 semaines. Le panier le plus demandé.",
+    heroImage: u("1596797038530-2c107229654b"),
+    destination: "kinshasa",
+    priceEUR: 8500, // 85 €
+    order: 20,
+    items: [
+      { name: "Riz parfumé", quantity: "10 kg" },
+      { name: "Farine de blé", quantity: "10 kg" },
+      { name: "Haricots rouges", quantity: "5 kg" },
+      { name: "Huile végétale", quantity: "4×1 L" },
+      { name: "Sucre", quantity: "3 kg" },
+      { name: "Sel", quantity: "1 kg" },
+      { name: "Sardines en boîte", quantity: "6 boîtes" },
+      { name: "Pâte de tomate", quantity: "6 sachets" },
+    ],
+  },
+  {
+    slug: "genereux-kinshasa",
+    name: "Généreux",
+    tagline: "Pour toute la maison pendant un mois, ou une grande occasion.",
+    heroImage: u("1574323347407-f5e1ad6d020b"),
+    destination: "kinshasa",
+    priceEUR: 15000, // 150 €
+    order: 30,
+    items: [
+      { name: "Riz parfumé", quantity: "20 kg" },
+      { name: "Farine de blé", quantity: "15 kg" },
+      { name: "Haricots rouges", quantity: "10 kg" },
+      { name: "Huile végétale", quantity: "6×1 L" },
+      { name: "Sucre", quantity: "5 kg" },
+      { name: "Sel", quantity: "2 kg" },
+      { name: "Sardines en boîte", quantity: "12 boîtes" },
+      { name: "Pâte de tomate", quantity: "10 sachets" },
+      { name: "Lait en poudre", quantity: "2 boîtes" },
+      { name: "Poisson salé (makayabu)", quantity: "2 kg" },
+      { name: "Savon de Marseille", quantity: "6 pains" },
+    ],
+  },
+];
+
+async function syncBaskets() {
+  for (const seed of BASKET_SEEDS) {
+    const existing = await prisma.basket.findUnique({
+      where: { slug: seed.slug },
+    });
+    if (existing) continue; // respect admin edits on price/contents
+    await prisma.basket.create({
+      data: {
+        slug: seed.slug,
+        name: seed.name,
+        tagline: seed.tagline,
+        heroImage: seed.heroImage,
+        destination: seed.destination,
+        priceEUR: seed.priceEUR,
+        order: seed.order,
+        items: {
+          create: seed.items.map((it, i) => ({
+            name: it.name,
+            quantity: it.quantity,
+            order: i,
+          })),
+        },
+      },
+    });
+  }
+}
+
 async function syncGuides() {
   for (const seed of GUIDE_SEEDS) {
     const existing = await prisma.guide.findUnique({
@@ -637,6 +735,9 @@ async function main() {
   // them, but make sure the starter set is present on a fresh DB.
   await syncGuides();
 
+  // Baskets are product catalog — insert-only so admin price edits stick.
+  await syncBaskets();
+
   // Wipe existing annonces so the seed is idempotent in development.
   await prisma.annonce.deleteMany({});
 
@@ -657,13 +758,15 @@ async function main() {
     });
   }
 
-  const [annonceCount, moduleCount, guideCount] = await Promise.all([
-    prisma.annonce.count(),
-    prisma.module.count(),
-    prisma.guide.count(),
-  ]);
+  const [annonceCount, moduleCount, guideCount, basketCount] =
+    await Promise.all([
+      prisma.annonce.count(),
+      prisma.module.count(),
+      prisma.guide.count(),
+      prisma.basket.count(),
+    ]);
   console.log(
-    `Seeded ${moduleCount} modules, ${guideCount} guides and ${annonceCount} annonces.`,
+    `Seeded ${moduleCount} modules, ${guideCount} guides, ${basketCount} baskets and ${annonceCount} annonces.`,
   );
 }
 

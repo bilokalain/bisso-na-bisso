@@ -59,6 +59,9 @@ export default async function AnnonceDetailPage({
   const { type, slug } = await params;
   const module = await getModuleByKey(type);
   if (!module) notFound();
+  // Defensive: static routes for non-annonce modules (infos-rapides, ndumba)
+  // take precedence, but 404 if someone lands here through a stale URL.
+  if (module.contentType !== "annonce") notFound();
   const annonce = await getAnnonceBySlug(slug);
   if (!annonce || annonce.type !== type) notFound();
 

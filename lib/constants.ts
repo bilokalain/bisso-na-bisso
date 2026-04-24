@@ -1,48 +1,8 @@
-export const ANNONCE_TYPES = ["evenementiel", "colis", "repetiteur"] as const;
-export type AnnonceType = (typeof ANNONCE_TYPES)[number];
-
-export function isAnnonceType(v: string): v is AnnonceType {
-  return (ANNONCE_TYPES as readonly string[]).includes(v);
-}
-
-export const VERTICALES: Record<
-  AnnonceType,
-  {
-    label: string;
-    labelLong: string;
-    tagline: string;
-    eyebrow: string;
-    /** Tailwind bg token for accent surfaces. */
-    accentBg: string;
-    /** Tailwind text token for accent (on ivory). */
-    accentText: string;
-  }
-> = {
-  evenementiel: {
-    label: "Événementiel",
-    labelLong: "Événementiel",
-    tagline: "Prestataires pour fêtes, mariages, anniversaires.",
-    eyebrow: "Événementiel",
-    accentBg: "bg-forest",
-    accentText: "text-forest",
-  },
-  colis: {
-    label: "Colis",
-    labelLong: "Co-transport de colis",
-    tagline: "Bagage partagé entre voyageurs, corridors diaspora.",
-    eyebrow: "Colis",
-    accentBg: "bg-terracotta",
-    accentText: "text-terracotta",
-  },
-  repetiteur: {
-    label: "Répétiteurs",
-    labelLong: "Profs particuliers",
-    tagline: "Cours particuliers, primaire au supérieur.",
-    eyebrow: "Répétiteurs",
-    accentBg: "bg-gold",
-    accentText: "text-gold",
-  },
-};
+/**
+ * Field-level configs reused across modules. Module identity, colors and
+ * status live in lib/modules.ts — this file is only for the option lists
+ * that feed dropdowns and label lookups.
+ */
 
 export const CATEGORIES_EVENEMENTIEL = [
   { value: "coiffure", label: "Coiffure" },

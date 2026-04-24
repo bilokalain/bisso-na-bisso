@@ -1,10 +1,18 @@
 import Link from "next/link";
+import { ModuleIcon } from "@/components/module-icon";
+import {
+  COLOR_TOKEN,
+  getPublicModules,
+  type ModuleWithState,
+} from "@/lib/modules";
 
-export default function Home() {
+export default async function Home() {
+  const modules = await getPublicModules();
+
   return (
     <>
       <Hero />
-      <Verticales />
+      <Verticales modules={modules} />
       <HowItWorks />
       <Footer />
     </>
@@ -32,9 +40,9 @@ function Hero() {
           <span className="italic text-forest">pour nous.</span>
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-muted sm:text-xl">
-          Les bons plans de la communauté, sans friction&nbsp;: prestataires de
-          fête, co-transport de colis, profs particuliers. Gratuit, sans
-          compte, contact direct.
+          Les bons plans de la communauté, sans friction — événementiel,
+          restauration, colis, répétiteurs, petits boulots, et plus à venir.
+          Gratuit, sans compte, contact direct.
         </p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
           <Link
@@ -45,7 +53,7 @@ function Hero() {
             <ArrowRight />
           </Link>
           <a
-            href="#verticales"
+            href="#modules"
             className="inline-flex items-center gap-2 rounded-full border border-ink/15 bg-ivory px-6 py-3 text-base font-medium text-ink transition hover:border-ink/30"
           >
             Parcourir
@@ -59,99 +67,82 @@ function Hero() {
   );
 }
 
-function Verticales() {
+function Verticales({ modules }: { modules: ModuleWithState[] }) {
   return (
-    <section id="verticales" className="scroll-mt-24 border-t border-sand bg-ivory-deep">
+    <section
+      id="modules"
+      className="scroll-mt-24 border-t border-sand bg-ivory-deep"
+    >
       <div className="mx-auto max-w-6xl px-4 py-16 sm:py-20">
         <div className="mb-10 flex items-end justify-between gap-4">
           <div>
             <p className="text-xs font-medium uppercase tracking-wider text-ink-muted">
-              Trois catégories
+              Ce qu'on propose
             </p>
             <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-              Ce que tu trouveras ici
+              Des catégories pensées pour nous.
             </h2>
           </div>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-6">
-          <VerticaleCard
-            href="/evenementiel"
-            eyebrow="Événementiel"
-            title="Fêtes, mariages, tous styles"
-            description="Coiffure, traiteur, DJ, photo, vidéo, déco, salle, brasseur."
-            bg="bg-forest"
-            fg="text-ivory"
-            accent="text-gold"
-            icon={<IconParty />}
-          />
-          <VerticaleCard
-            href="/colis"
-            eyebrow="Colis"
-            title="Co-transport par voyageurs"
-            description="Bruxelles, Kin, Brazza, Paris. Kilos dispo, prix au kilo, date du vol."
-            bg="bg-terracotta"
-            fg="text-ivory"
-            accent="text-ivory"
-            icon={<IconPlane />}
-          />
-          <VerticaleCard
-            href="/repetiteur"
-            eyebrow="Répétiteurs"
-            title="Profs particuliers"
-            description="Maths, français, néerlandais, anglais. Primaire au supérieur, en ligne ou chez toi."
-            bg="bg-sand"
-            fg="text-ink"
-            accent="text-terracotta"
-            icon={<IconBook />}
-          />
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+          {modules.map((m) => (
+            <ModuleCard key={m.key} module={m} />
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
-type CardProps = {
-  href: string;
-  eyebrow: string;
-  title: string;
-  description: string;
-  bg: string;
-  fg: string;
-  accent: string;
-  icon: React.ReactNode;
-};
+function ModuleCard({ module }: { module: ModuleWithState }) {
+  const tokens = COLOR_TOKEN[module.color];
+  const href =
+    module.status === "ENABLED" ? `/${module.key}` : `/bientot/${module.key}`;
+  const isComingSoon = module.status === "COMING_SOON";
 
-function VerticaleCard({
-  href,
-  eyebrow,
-  title,
-  description,
-  bg,
-  fg,
-  accent,
-  icon,
-}: CardProps) {
   return (
     <Link
       href={href}
-      className={`group relative flex flex-col justify-between overflow-hidden rounded-2xl ${bg} ${fg} p-6 shadow-card transition hover:shadow-float sm:min-h-[280px] sm:p-7`}
+      className={`group relative flex flex-col overflow-hidden rounded-2xl p-6 shadow-card transition hover:shadow-float sm:p-7 ${
+        isComingSoon
+          ? `${tokens.soft} text-ink`
+          : `${tokens.bg} text-ivory`
+      }`}
     >
       <div className="flex items-start justify-between">
         <span
-          className={`text-xs font-medium uppercase tracking-wider ${accent}`}
+          className={`text-xs font-medium uppercase tracking-wider ${
+            isComingSoon ? tokens.text : "opacity-80"
+          }`}
         >
-          {eyebrow}
+          {module.label}
         </span>
-        <span className="opacity-80 transition group-hover:translate-x-1">
-          <ArrowRight />
-        </span>
+        {isComingSoon ? (
+          <span className="rounded-full border border-ink/15 bg-ivory px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-ink-muted">
+            Bientôt
+          </span>
+        ) : (
+          <span className="opacity-80 transition group-hover:translate-x-1">
+            <ArrowRight />
+          </span>
+        )}
       </div>
-      <div className="mt-8">
-        <div className={`mb-4 ${accent}`}>{icon}</div>
-        <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight sm:text-[1.75rem]">
-          {title}
+
+      <div className="mt-6 flex flex-1 flex-col">
+        <div className={isComingSoon ? tokens.text : "opacity-95"}>
+          <ModuleIcon name={module.iconName} size={36} />
+        </div>
+        <h3 className="mt-3 font-display text-xl font-semibold leading-tight tracking-tight sm:text-2xl">
+          {module.labelLong}
         </h3>
-        <p className="mt-2 text-sm leading-relaxed opacity-85">{description}</p>
+        <p
+          className={`mt-2 text-sm leading-relaxed ${
+            isComingSoon ? "text-ink-muted" : "opacity-90"
+          }`}
+        >
+          {module.tagline}
+        </p>
       </div>
     </Link>
   );
@@ -220,8 +211,6 @@ function Footer() {
   );
 }
 
-/* --- inline icons --- */
-
 function ArrowRight() {
   return (
     <svg
@@ -257,71 +246,6 @@ function CheckDot() {
     >
       <circle cx="12" cy="12" r="10" />
       <path d="m8 12 3 3 5-6" />
-    </svg>
-  );
-}
-
-function IconParty() {
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M5.8 11.3 2 22l10.7-3.79" />
-      <path d="M4 3h.01" />
-      <path d="M22 8h.01" />
-      <path d="M15 2h.01" />
-      <path d="M22 20h.01" />
-      <path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10" />
-      <path d="m22 13-1.3.75a2.9 2.9 0 0 1-3.12-.02l-.41-.27a2.87 2.87 0 0 0-3.1 0l-.29.2a2.87 2.87 0 0 1-3.1 0L10 13.5" />
-      <path d="m11 2 .33.5a2.9 2.9 0 0 1 0 3l-.34.5a2.87 2.87 0 0 0 0 3l.34.5" />
-    </svg>
-  );
-}
-
-function IconPlane() {
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M17.8 19.2 16 11l3.5-3.5A2.12 2.12 0 0 0 16.5 4.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
-    </svg>
-  );
-}
-
-function IconBook() {
-  return (
-    <svg
-      width="40"
-      height="40"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M12 7v14" />
-      <path d="M16 12h2" />
-      <path d="M16 8h2" />
-      <path d="M3 18a1 1 0 0 0 1 1h3a4 4 0 0 1 4 2V8a3 3 0 0 0-3-3H4a1 1 0 0 0-1 1z" />
-      <path d="M21 18a1 1 0 0 1-1 1h-2.5a4 4 0 0 0-3.5 2V8a3 3 0 0 1 3-3h3a1 1 0 0 1 1 1z" />
     </svg>
   );
 }

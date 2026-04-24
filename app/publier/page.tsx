@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ANNONCE_TYPES, VERTICALES } from "@/lib/constants";
+import { COLOR_TOKEN, getEnabledModules } from "@/lib/modules";
 
 export const metadata: Metadata = {
   title: "Publier une annonce",
@@ -8,7 +8,9 @@ export const metadata: Metadata = {
     "Publie une annonce sur Bisso na Bisso — gratuit, sans compte, contact direct.",
 };
 
-export default function PublierPage() {
+export default async function PublierPage() {
+  const enabled = await getEnabledModules();
+
   return (
     <section className="mx-auto max-w-3xl px-4 py-10 sm:py-16">
       <header>
@@ -25,22 +27,22 @@ export default function PublierPage() {
       </header>
 
       <div className="mt-10 grid grid-cols-1 gap-4 sm:gap-5">
-        {ANNONCE_TYPES.map((t) => {
-          const v = VERTICALES[t];
+        {enabled.map((m) => {
+          const tokens = COLOR_TOKEN[m.color];
           return (
             <Link
-              key={t}
-              href={`/publier/${t}`}
-              className={`group flex items-center justify-between gap-4 rounded-2xl ${v.accentBg} p-5 text-ivory shadow-card transition hover:shadow-float sm:p-6`}
+              key={m.key}
+              href={`/publier/${m.key}`}
+              className={`group flex items-center justify-between gap-4 rounded-2xl ${tokens.bg} p-5 text-ivory shadow-card transition hover:shadow-float sm:p-6`}
             >
               <div className="min-w-0">
                 <p className="text-xs font-medium uppercase tracking-wider opacity-80">
-                  {v.eyebrow}
+                  {m.label}
                 </p>
                 <p className="mt-1 font-display text-2xl font-semibold tracking-tight sm:text-3xl">
-                  {v.labelLong}
+                  {m.labelLong}
                 </p>
-                <p className="mt-1 text-sm opacity-85">{v.tagline}</p>
+                <p className="mt-1 text-sm opacity-85">{m.tagline}</p>
               </div>
               <span className="shrink-0 opacity-90 transition group-hover:translate-x-1">
                 <svg

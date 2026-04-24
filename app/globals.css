@@ -18,6 +18,21 @@
   --color-terracotta-soft: #fbe4db;
 
   --color-gold: #d4a62a;
+  --color-gold-soft: #fbf1cc;
+
+  /* Additional module accent colors — extended palette for 12 modules. */
+  --color-clay: #8b5a3c;
+  --color-clay-soft: #f2e3d4;
+  --color-cobalt: #1e4e7a;
+  --color-cobalt-soft: #dde8f1;
+  --color-plum: #6b3f6e;
+  --color-plum-soft: #ebdeee;
+  --color-rose: #c25a6f;
+  --color-rose-soft: #fadfe5;
+  --color-sky: #3a8ca8;
+  --color-sky-soft: #def0f5;
+  --color-graphite: #2f363a;
+  --color-graphite-soft: #e0e2e4;
 
   --color-danger: #b3261e;
   --color-success: #2e7d32;

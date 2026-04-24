@@ -74,3 +74,35 @@ enum Status {
   ARCHIVED
   REJECTED
 }
+
+model Module {
+  id        String       @id @default(cuid())
+  key       String       @unique
+  label     String
+  tagline   String
+  status    ModuleStatus @default(DISABLED)
+  order     Int          @default(0)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  interests ModuleInterest[]
+
+  @@index([status])
+  @@index([order])
+}
+
+enum ModuleStatus {
+  ENABLED
+  COMING_SOON
+  DISABLED
+}
+
+model ModuleInterest {
+  id        String   @id @default(cuid())
+  moduleId  String
+  module    Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  email     String
+  createdAt DateTime @default(now())
+
+  @@unique([moduleId, email])
+  @@index([moduleId])
+}

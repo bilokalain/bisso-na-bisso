@@ -8,14 +8,13 @@ import {
   MODALITES,
   NIVEAUX,
   VILLES_SUGGEREES,
-  type AnnonceType,
 } from "@/lib/constants";
 
 type Props = {
-  type: AnnonceType;
+  formProfile: string;
 };
 
-export function FiltersBar({ type }: Props) {
+export function FiltersBar({ formProfile }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const params = useSearchParams();
@@ -45,7 +44,7 @@ export function FiltersBar({ type }: Props) {
           isPending ? "opacity-60" : ""
         }`}
       >
-        {type === "evenementiel" && (
+        {formProfile === "evenementiel" && (
           <>
             <Select
               label="Catégorie"
@@ -62,7 +61,7 @@ export function FiltersBar({ type }: Props) {
           </>
         )}
 
-        {type === "colis" && (
+        {formProfile === "colis" && (
           <>
             <VilleInput
               name="depart"
@@ -79,7 +78,7 @@ export function FiltersBar({ type }: Props) {
           </>
         )}
 
-        {type === "repetiteur" && (
+        {formProfile === "repetiteur" && (
           <>
             <Select
               label="Matière"
@@ -103,6 +102,14 @@ export function FiltersBar({ type }: Props) {
               options={MODALITES}
             />
           </>
+        )}
+
+        {formProfile === "standard" && (
+          <VilleInput
+            name="ville"
+            value={params?.get("ville") ?? ""}
+            onChange={(v) => update("ville", v)}
+          />
         )}
 
         {hasAnyFilter && (

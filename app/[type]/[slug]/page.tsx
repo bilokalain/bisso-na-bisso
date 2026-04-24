@@ -5,15 +5,13 @@ import type { Metadata } from "next";
 import { ContactButtons } from "@/components/contact-buttons";
 import { PublishedBanner } from "@/components/published-banner";
 import { getAnnonceBySlug } from "@/lib/annonces";
+import { COLOR_TOKEN, getModuleByKey } from "@/lib/modules";
 import {
   CATEGORIES_EVENEMENTIEL,
   MATIERES,
   MODALITES,
   NIVEAUX,
-  VERTICALES,
-  isAnnonceType,
   labelFor,
-  type AnnonceType,
 } from "@/lib/constants";
 
 type Props = {
@@ -23,11 +21,11 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { type, slug } = await params;
-  if (!isAnnonceType(type)) return {};
+  const module = await getModuleByKey(type);
+  if (!module) return {};
   const annonce = await getAnnonceBySlug(slug);
   if (!annonce || annonce.type !== type) return {};
 
-  const vertical = VERTICALES[type];
   const descExcerpt =
     annonce.description.length > 160
       ? `${annonce.description.slice(0, 157)}…`
@@ -46,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     twitter: {
       card: annonce.photo ? "summary_large_image" : "summary",
-      title: `${annonce.titre} — ${vertical.labelLong}`,
+      title: `${annonce.titre} — ${module.labelLong}`,
       description: descExcerpt,
       images: annonce.photo ? [annonce.photo] : undefined,
     },
@@ -58,13 +56,14 @@ export default async function AnnonceDetailPage({
   searchParams,
 }: Props) {
   const { type, slug } = await params;
-  if (!isAnnonceType(type)) notFound();
+  const module = await getModuleByKey(type);
+  if (!module) notFound();
   const annonce = await getAnnonceBySlug(slug);
   if (!annonce || annonce.type !== type) notFound();
 
   const sp = await searchParams;
   const justPublished = sp.published === "1";
-  const vertical = VERTICALES[type];
+  const tokens = COLOR_TOKEN[module.color];
   const createdFmt = new Intl.DateTimeFormat("fr-BE", {
     day: "numeric",
     month: "long",
@@ -79,7 +78,7 @@ export default async function AnnonceDetailPage({
         </Link>
         <span className="mx-2 opacity-40">/</span>
         <Link href={`/${type}`} className="hover:text-ink">
-          {vertical.label}
+          {module.label}
         </Link>
       </nav>
 
@@ -89,14 +88,14 @@ export default async function AnnonceDetailPage({
 
       <header className="mx-auto mt-6 max-w-4xl px-4">
         <span
-          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider text-ivory ${vertical.accentBg}`}
+          className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wider text-ivory ${tokens.bg}`}
         >
-          {vertical.eyebrow}
+          {module.label}
         </span>
         <h1 className="mt-4 font-display text-4xl font-semibold leading-tight tracking-tight sm:text-5xl md:text-6xl">
           {annonce.titre}
         </h1>
-        <MetaRow annonce={annonce} type={type} />
+        <MetaRow annonce={annonce} formProfile={module.formProfile} />
       </header>
 
       {annonce.photo ? (
@@ -160,12 +159,12 @@ export default async function AnnonceDetailPage({
 
 function MetaRow({
   annonce,
-  type,
+  formProfile,
 }: {
   annonce: NonNullable<Awaited<ReturnType<typeof getAnnonceBySlug>>>;
-  type: AnnonceType;
+  formProfile: string;
 }) {
-  if (type === "colis") {
+  if (formProfile === "colis") {
     const d = annonce.dateVoyage
       ? new Intl.DateTimeFormat("fr-BE", {
           day: "numeric",
@@ -181,7 +180,9 @@ function MetaRow({
           {annonce.villeArrivee}
         </span>
         {d && <span>Départ le {d}</span>}
-        {annonce.kgDispo != null && <span>{annonce.kgDispo} kg disponibles</span>}
+        {annonce.kgDispo != null && (
+          <span>{annonce.kgDispo} kg disponibles</span>
+        )}
         {annonce.prixParKg != null && (
           <span className="font-medium text-ink">
             {annonce.prixParKg} €/kg
@@ -191,7 +192,7 @@ function MetaRow({
     );
   }
 
-  if (type === "repetiteur") {
+  if (formProfile === "repetiteur") {
     const matiere = labelFor(MATIERES, annonce.matiere);
     const niveau = labelFor(NIVEAUX, annonce.niveau);
     const modalite = labelFor(MODALITES, annonce.modalite);
@@ -208,14 +209,31 @@ function MetaRow({
     );
   }
 
-  const categorie = labelFor(CATEGORIES_EVENEMENTIEL, annonce.categorie);
+  if (formProfile === "evenementiel") {
+    const categorie = labelFor(CATEGORIES_EVENEMENTIEL, annonce.categorie);
+    return (
+      <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-ink-muted">
+        {categorie && (
+          <span className="font-medium text-ink">{categorie}</span>
+        )}
+        {annonce.ville && <span>{annonce.ville}</span>}
+        {annonce.prix != null && (
+          <span className="font-medium text-ink">
+            à partir de {annonce.prix}{" "}
+            {annonce.devise === "EUR" ? "€" : annonce.devise}
+          </span>
+        )}
+      </div>
+    );
+  }
+
+  // standard
   return (
     <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-ink-muted">
-      {categorie && <span className="font-medium text-ink">{categorie}</span>}
-      {annonce.ville && <span>{annonce.ville}</span>}
+      {annonce.ville && <span className="font-medium text-ink">{annonce.ville}</span>}
       {annonce.prix != null && (
         <span className="font-medium text-ink">
-          à partir de {annonce.prix} {annonce.devise === "EUR" ? "€" : annonce.devise}
+          {annonce.prix} {annonce.devise === "EUR" ? "€" : annonce.devise}
         </span>
       )}
     </div>

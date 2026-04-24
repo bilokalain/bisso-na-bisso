@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import type { AnnonceType } from "@/lib/constants";
 
 export type AnnoncesListFilters = {
   ville?: string;
@@ -19,7 +18,7 @@ function ci(value: string | undefined) {
 }
 
 export async function listAnnonces(
-  type: AnnonceType,
+  type: string,
   filters: AnnoncesListFilters = {},
 ) {
   return prisma.annonce.findMany({

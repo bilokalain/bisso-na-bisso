@@ -5,12 +5,12 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { buildAnnonceSlug } from "@/lib/slug";
+import { getModuleByKey, getSpec } from "@/lib/modules";
 import {
   CATEGORIES_EVENEMENTIEL,
   MATIERES,
   MODALITES,
   NIVEAUX,
-  isAnnonceType,
 } from "@/lib/constants";
 
 const optionalString = (max: number) =>
@@ -68,9 +68,11 @@ const baseShape = {
     .pipe(z.string().email("E-mail invalide.").optional()),
 };
 
+const typeField = z.string().min(1);
+
 const evenementielSchema = z.object({
   ...baseShape,
-  type: z.literal("evenementiel"),
+  type: typeField,
   categorie: z
     .enum(CATEGORIES_EVENEMENTIEL.map((c) => c.value) as [string, ...string[]])
     .optional(),
@@ -78,7 +80,7 @@ const evenementielSchema = z.object({
 
 const colisSchema = z.object({
   ...baseShape,
-  type: z.literal("colis"),
+  type: typeField,
   villeDepart: z
     .string()
     .trim()
@@ -106,7 +108,7 @@ const colisSchema = z.object({
 
 const repetiteurSchema = z.object({
   ...baseShape,
-  type: z.literal("repetiteur"),
+  type: typeField,
   matiere: z
     .enum(MATIERES.map((m) => m.value) as [string, ...string[]])
     .optional(),
@@ -118,11 +120,17 @@ const repetiteurSchema = z.object({
     .optional(),
 });
 
-const schema = z.discriminatedUnion("type", [
-  evenementielSchema,
-  colisSchema,
-  repetiteurSchema,
-]);
+const standardSchema = z.object({
+  ...baseShape,
+  type: typeField,
+});
+
+function schemaFor(formProfile: string) {
+  if (formProfile === "evenementiel") return evenementielSchema;
+  if (formProfile === "colis") return colisSchema;
+  if (formProfile === "repetiteur") return repetiteurSchema;
+  return standardSchema;
+}
 
 export type CreateAnnonceState = {
   error?: string;
@@ -133,11 +141,23 @@ export async function createAnnonce(
   _prevState: CreateAnnonceState,
   formData: FormData,
 ): Promise<CreateAnnonceState> {
-  const type = formData.get("type");
-  if (typeof type !== "string" || !isAnnonceType(type)) {
-    return { error: "Type d'annonce inconnu." };
+  const typeRaw = formData.get("type");
+  if (typeof typeRaw !== "string") {
+    return { error: "Type d'annonce manquant." };
+  }
+  const spec = getSpec(typeRaw);
+  if (!spec) {
+    return { error: "Module inconnu." };
+  }
+  const module = await getModuleByKey(typeRaw);
+  if (!module || module.status !== "ENABLED") {
+    return {
+      error:
+        "Ce module n'accepte pas encore de publication. Reviens quand il sera activé.",
+    };
   }
 
+  const schema = schemaFor(spec.formProfile);
   const raw = Object.fromEntries(formData);
   const parsed = schema.safeParse(raw);
   if (!parsed.success) {
@@ -148,12 +168,44 @@ export async function createAnnonce(
     };
   }
 
-  const data = parsed.data;
+  const data = parsed.data as Record<string, unknown> & {
+    type: string;
+    titre: string;
+    description: string;
+    contactNom: string;
+    contactTelephone: string;
+    ville?: string;
+    photo?: string;
+    prix?: number;
+    contactEmail?: string;
+  };
+  const type = data.type;
   const expiresAt = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+
+  const profileExtras =
+    spec.formProfile === "evenementiel"
+      ? { categorie: data.categorie as string | undefined }
+      : spec.formProfile === "colis"
+        ? {
+            villeDepart: data.villeDepart as string,
+            villeArrivee: data.villeArrivee as string,
+            dateVoyage: data.dateVoyage
+              ? new Date(data.dateVoyage as string)
+              : null,
+            kgDispo: data.kgDispo as number | undefined,
+            prixParKg: data.prixParKg as number | undefined,
+          }
+        : spec.formProfile === "repetiteur"
+          ? {
+              matiere: data.matiere as string | undefined,
+              niveau: data.niveau as string | undefined,
+              modalite: data.modalite as string | undefined,
+            }
+          : {};
 
   const created = await prisma.annonce.create({
     data: {
-      type: data.type,
+      type,
       titre: data.titre,
       description: data.description,
       ville: data.ville,
@@ -162,25 +214,7 @@ export async function createAnnonce(
       contactNom: data.contactNom,
       contactTelephone: data.contactTelephone,
       contactEmail: data.contactEmail,
-      ...(data.type === "evenementiel"
-        ? { categorie: data.categorie }
-        : {}),
-      ...(data.type === "colis"
-        ? {
-            villeDepart: data.villeDepart,
-            villeArrivee: data.villeArrivee,
-            dateVoyage: data.dateVoyage ? new Date(data.dateVoyage) : null,
-            kgDispo: data.kgDispo,
-            prixParKg: data.prixParKg,
-          }
-        : {}),
-      ...(data.type === "repetiteur"
-        ? {
-            matiere: data.matiere,
-            niveau: data.niveau,
-            modalite: data.modalite,
-          }
-        : {}),
+      ...profileExtras,
       slug: "__pending__",
       expiresAt,
     },
@@ -189,6 +223,6 @@ export async function createAnnonce(
   const slug = buildAnnonceSlug(data.titre, created.id);
   await prisma.annonce.update({ where: { id: created.id }, data: { slug } });
 
-  revalidatePath(`/${data.type}`);
-  redirect(`/${data.type}/${slug}?published=1`);
+  revalidatePath(`/${type}`);
+  redirect(`/${type}/${slug}?published=1`);
 }

@@ -6,19 +6,23 @@ import {
   MATIERES,
   MODALITES,
   NIVEAUX,
-  VERTICALES,
   labelFor,
-  type AnnonceType,
 } from "@/lib/constants";
+import { COLOR_TOKEN, type ModuleColor } from "@/lib/modules";
 
 type Props = {
   annonce: Annonce;
+  module: {
+    key: string;
+    label: string;
+    color: ModuleColor;
+    formProfile: string;
+  };
 };
 
-export function AnnonceCard({ annonce }: Props) {
-  const type = annonce.type as AnnonceType;
-  const vertical = VERTICALES[type];
-  const href = `/${type}/${annonce.slug}`;
+export function AnnonceCard({ annonce, module }: Props) {
+  const href = `/${module.key}/${annonce.slug}`;
+  const tokens = COLOR_TOKEN[module.color];
 
   return (
     <Link
@@ -35,12 +39,12 @@ export function AnnonceCard({ annonce }: Props) {
             className="object-cover transition duration-300 group-hover:scale-[1.02]"
           />
         ) : (
-          <PlaceholderArt type={type} />
+          <PlaceholderArt color={module.color} />
         )}
         <span
-          className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-ivory ${vertical.accentBg}`}
+          className={`absolute left-3 top-3 rounded-full px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-ivory ${tokens.bg}`}
         >
-          {vertical.eyebrow}
+          {module.label}
         </span>
       </div>
 
@@ -48,16 +52,20 @@ export function AnnonceCard({ annonce }: Props) {
         <h3 className="line-clamp-2 font-display text-lg font-semibold leading-snug tracking-tight text-ink">
           {annonce.titre}
         </h3>
-        <Meta annonce={annonce} />
+        <Meta annonce={annonce} formProfile={module.formProfile} />
       </div>
     </Link>
   );
 }
 
-function Meta({ annonce }: Props) {
-  const type = annonce.type as AnnonceType;
-
-  if (type === "colis") {
+function Meta({
+  annonce,
+  formProfile,
+}: {
+  annonce: Annonce;
+  formProfile: string;
+}) {
+  if (formProfile === "colis") {
     const d = annonce.dateVoyage
       ? new Date(annonce.dateVoyage).toLocaleDateString("fr-BE", {
           day: "numeric",
@@ -84,7 +92,7 @@ function Meta({ annonce }: Props) {
     );
   }
 
-  if (type === "repetiteur") {
+  if (formProfile === "repetiteur") {
     const matiere = labelFor(MATIERES, annonce.matiere);
     const niveau = labelFor(NIVEAUX, annonce.niveau);
     const modalite = labelFor(MODALITES, annonce.modalite);
@@ -107,17 +115,36 @@ function Meta({ annonce }: Props) {
     );
   }
 
-  // evenementiel
-  const categorie = labelFor(CATEGORIES_EVENEMENTIEL, annonce.categorie);
+  if (formProfile === "evenementiel") {
+    const categorie = labelFor(CATEGORIES_EVENEMENTIEL, annonce.categorie);
+    return (
+      <div className="mt-auto space-y-2 text-sm">
+        <div className="flex flex-wrap items-center gap-1.5">
+          {categorie && <Pill>{categorie}</Pill>}
+          {annonce.ville && <Pill muted>{annonce.ville}</Pill>}
+        </div>
+        {annonce.prix != null && (
+          <div className="flex items-center justify-end text-ink">
+            <span className="text-xs text-ink-muted">à partir de</span>
+            <span className="ml-1 font-medium">
+              {annonce.prix} {annonce.devise === "EUR" ? "€" : annonce.devise}
+            </span>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Standard / generic (restauration, petits-boulots, etc.)
   return (
     <div className="mt-auto space-y-2 text-sm">
-      <div className="flex flex-wrap items-center gap-1.5">
-        {categorie && <Pill>{categorie}</Pill>}
-        {annonce.ville && <Pill muted>{annonce.ville}</Pill>}
-      </div>
+      {annonce.ville ? (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Pill muted>{annonce.ville}</Pill>
+        </div>
+      ) : null}
       {annonce.prix != null && (
         <div className="flex items-center justify-end text-ink">
-          <span className="text-xs text-ink-muted">à partir de</span>
           <span className="ml-1 font-medium">
             {annonce.prix} {annonce.devise === "EUR" ? "€" : annonce.devise}
           </span>
@@ -167,23 +194,19 @@ function Arrow() {
   );
 }
 
-function PlaceholderArt({ type }: { type: AnnonceType }) {
-  // Subtle gradient fallback keyed on the vertical, so no-photo cards stay
-  // on-brand rather than looking broken.
-  const bg =
-    type === "evenementiel"
-      ? "linear-gradient(135deg, #1B5E3F 0%, #123F2A 100%)"
-      : type === "colis"
-        ? "linear-gradient(135deg, #C85A3B 0%, #A44529 100%)"
-        : "linear-gradient(135deg, #EFE6D6 0%, #D4A62A 100%)";
+// Gradient fallback keyed on the module accent color. Reads the CSS
+// variable so every new color automatically has a matching placeholder.
+function PlaceholderArt({ color }: { color: ModuleColor }) {
   return (
     <div
       className="flex h-full w-full items-center justify-center text-ivory"
-      style={{ background: bg }}
+      style={{
+        background: `linear-gradient(135deg, var(--color-${color}) 0%, var(--color-${color}) 60%, rgba(0,0,0,0.25) 100%)`,
+      }}
       aria-hidden
     >
-      <span className="font-display text-4xl opacity-70">
-        B<span className="opacity-80">.</span>
+      <span className="font-display text-4xl opacity-80">
+        B<span className="opacity-90">.</span>
       </span>
     </div>
   );

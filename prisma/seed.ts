@@ -1,5 +1,6 @@
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { PrismaClient } from "../generated/prisma/client";
+import { MODULE_CATALOG } from "../lib/modules-catalog";
 import { buildAnnonceSlug } from "../lib/slug";
 
 const adapter = new PrismaBetterSqlite3({
@@ -8,7 +9,7 @@ const adapter = new PrismaBetterSqlite3({
 const prisma = new PrismaClient({ adapter });
 
 type Seed = {
-  type: "evenementiel" | "colis" | "repetiteur";
+  type: string;
   titre: string;
   description: string;
   ville?: string;
@@ -291,9 +292,128 @@ const SEEDS: Seed[] = [
     contactTelephone: "+32485441122",
     contactEmail: "b.mwamba@example.be",
   },
+
+  // ---- Restauration ----
+  {
+    type: "restauration",
+    titre: "Plats maman — pondu, poisson fumé, chikwangue",
+    description:
+      "Cuisine maison chaque mercredi et samedi, livraison à Bruxelles. Plats individuels 10 €, barquettes famille 25 €.",
+    ville: "Bruxelles",
+    photo: u("1546069901-ba9599a7e63c"),
+    prix: 10,
+    contactNom: "Mama Jeanne",
+    contactTelephone: "+32470665544",
+  },
+  {
+    type: "restauration",
+    titre: "Cantine africaine du midi — Liège",
+    description:
+      "Menu à 12 € chaque midi : plat + boisson. Cuisine congolaise, camerounaise, ivoirienne en rotation. Emporter ou livraison.",
+    ville: "Liège",
+    photo: u("1555939594-58d7cb561ad1"),
+    prix: 12,
+    contactNom: "Le Baobab",
+    contactTelephone: "+32496112244",
+    contactEmail: "contact@baobab.example.be",
+  },
+  {
+    type: "restauration",
+    titre: "Chef freelance — privatisation à domicile",
+    description:
+      "Je viens cuisiner chez toi pour 6 à 20 convives. Menus mariage traditionnel, anniversaire, repas d'affaires. Devis en 24 h.",
+    ville: "Anvers",
+    photo: u("1546793665-c74683f339c1"),
+    prix: 45,
+    contactNom: "Chef Diallo",
+    contactTelephone: "+32494887766",
+    contactEmail: "chef.diallo@example.be",
+  },
+  {
+    type: "restauration",
+    titre: "Tchop bien le vendredi soir",
+    description:
+      "Poulet braisé, poisson grillé, alloco, plantain. Commande avant 17 h sur WhatsApp, retrait à partir de 19 h. Matonge.",
+    ville: "Bruxelles",
+    photo: u("1518492104633-130d0cc84637"),
+    prix: 15,
+    contactNom: "Tonton Fifi",
+    contactTelephone: "+32478993322",
+  },
+
+  // ---- Petits boulots ----
+  {
+    type: "petits-boulots",
+    titre: "Déménageur avec camionnette — Bruxelles et alentours",
+    description:
+      "Déménagement studio à appartement 2 chambres. Camionnette 12 m³ incluse. Devis gratuit, 2e personne en option.",
+    ville: "Bruxelles",
+    photo: u("1556909114-f6e7ad7d3136"),
+    prix: 30,
+    contactNom: "Marcel Kabila",
+    contactTelephone: "+32485112233",
+  },
+  {
+    type: "petits-boulots",
+    titre: "Plombier — dépannage 7j/7",
+    description:
+      "Fuite, chasse d'eau, évier bouché, chauffe-eau. Intervention en 2 h sur Bruxelles. Devis transparent avant d'intervenir.",
+    ville: "Bruxelles",
+    photo: u("1581244277943-fe4a9c777189"),
+    prix: 60,
+    contactNom: "Pascal Mbuyi",
+    contactTelephone: "+32494667788",
+    contactEmail: "pascal.mbuyi@example.be",
+  },
+  {
+    type: "petits-boulots",
+    titre: "Ménage à domicile — consciencieux, dispo en semaine",
+    description:
+      "Ménage régulier ou ponctuel, repassage inclus. Produits fournis si tu veux. Références vérifiables auprès de clientes actuelles.",
+    ville: "Charleroi",
+    photo: u("1621905251918-48416bd8575a"),
+    prix: 18,
+    contactNom: "Clarisse Muamba",
+    contactTelephone: "+32470885522",
+  },
+  {
+    type: "petits-boulots",
+    titre: "Électricien — petits travaux et mise aux normes",
+    description:
+      "Prises, tableau électrique, luminaires, interphone. Certifié. Travaille en soirée et week-end pour les locataires qui bossent.",
+    ville: "Anvers",
+    photo: u("1545239351-ef35f43d514b"),
+    prix: 55,
+    contactNom: "Éric Nkulu",
+    contactTelephone: "+32485336655",
+    contactEmail: "eric.nkulu@example.be",
+  },
 ];
 
+async function syncModules() {
+  for (const spec of MODULE_CATALOG) {
+    await prisma.module.upsert({
+      where: { key: spec.key },
+      // Don't clobber an admin's status/order — only initialise missing rows.
+      update: {
+        label: spec.label,
+        tagline: spec.tagline,
+      },
+      create: {
+        key: spec.key,
+        label: spec.label,
+        tagline: spec.tagline,
+        status: spec.defaultStatus,
+        order: spec.defaultOrder,
+      },
+    });
+  }
+}
+
 async function main() {
+  // Modules are product config — keep admin edits, just ensure rows exist.
+  await syncModules();
+
   // Wipe existing annonces so the seed is idempotent in development.
   await prisma.annonce.deleteMany({});
 
@@ -312,8 +432,11 @@ async function main() {
     });
   }
 
-  const count = await prisma.annonce.count();
-  console.log(`Seeded ${count} annonces.`);
+  const [annonceCount, moduleCount] = await Promise.all([
+    prisma.annonce.count(),
+    prisma.module.count(),
+  ]);
+  console.log(`Seeded ${moduleCount} modules and ${annonceCount} annonces.`);
 }
 
 main()

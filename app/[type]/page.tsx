@@ -1,9 +1,9 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { AnnonceCard } from "@/components/annonce-card";
 import { FiltersBar } from "@/components/filters-bar";
 import { listAnnonces } from "@/lib/annonces";
-import { VERTICALES, isAnnonceType } from "@/lib/constants";
+import { getModuleByKey, COLOR_TOKEN } from "@/lib/modules";
 
 type Props = {
   params: Promise<{ type: string }>;
@@ -12,14 +12,14 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { type } = await params;
-  if (!isAnnonceType(type)) return {};
-  const v = VERTICALES[type];
+  const module = await getModuleByKey(type);
+  if (!module || module.status === "DISABLED") return {};
   return {
-    title: v.labelLong,
-    description: v.tagline,
+    title: module.labelLong,
+    description: module.tagline,
     openGraph: {
-      title: `${v.labelLong} — Bisso na Bisso`,
-      description: v.tagline,
+      title: `${module.labelLong} — Bisso na Bisso`,
+      description: module.tagline,
     },
   };
 }
@@ -34,9 +34,11 @@ function pick(
 
 export default async function ListingPage({ params, searchParams }: Props) {
   const { type } = await params;
-  if (!isAnnonceType(type)) notFound();
-  const sp = await searchParams;
+  const module = await getModuleByKey(type);
+  if (!module || module.status === "DISABLED") notFound();
+  if (module.status === "COMING_SOON") redirect(`/bientot/${module.key}`);
 
+  const sp = await searchParams;
   const annonces = await listAnnonces(type, {
     ville: pick(sp, "ville"),
     categorie: pick(sp, "categorie"),
@@ -47,25 +49,25 @@ export default async function ListingPage({ params, searchParams }: Props) {
     modalite: pick(sp, "modalite"),
   });
 
-  const v = VERTICALES[type];
+  const tokens = COLOR_TOKEN[module.color];
 
   return (
     <>
       <section className="border-b border-sand">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
           <p
-            className={`text-xs font-medium uppercase tracking-wider ${v.accentText}`}
+            className={`text-xs font-medium uppercase tracking-wider ${tokens.text}`}
           >
-            {v.eyebrow}
+            {module.label}
           </p>
           <h1 className="mt-2 font-display text-4xl font-semibold tracking-tight sm:text-5xl">
-            {v.labelLong}
+            {module.labelLong}
           </h1>
-          <p className="mt-3 max-w-xl text-ink-muted">{v.tagline}</p>
+          <p className="mt-3 max-w-xl text-ink-muted">{module.tagline}</p>
         </div>
       </section>
 
-      <FiltersBar type={type} />
+      <FiltersBar formProfile={module.formProfile} />
 
       <section className="mx-auto max-w-6xl px-4 py-10 sm:py-12">
         {annonces.length === 0 ? (
@@ -77,7 +79,16 @@ export default async function ListingPage({ params, searchParams }: Props) {
             </p>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
               {annonces.map((a) => (
-                <AnnonceCard key={a.id} annonce={a} />
+                <AnnonceCard
+                  key={a.id}
+                  annonce={a}
+                  module={{
+                    key: module.key,
+                    label: module.label,
+                    color: module.color,
+                    formProfile: module.formProfile,
+                  }}
+                />
               ))}
             </div>
           </>

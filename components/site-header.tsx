@@ -1,6 +1,12 @@
 import Link from "next/link";
+import { isAdmin } from "@/lib/admin";
 
-export function SiteHeader() {
+export async function SiteHeader() {
+  // Conditionally render the admin entry only when the admin cookie is
+  // valid — this keeps the surface invisible to normal visitors while
+  // giving the signed-in admin a one-tap link from anywhere on the site.
+  const authed = await isAdmin();
+
   return (
     <header className="sticky top-0 z-30 border-b border-sand bg-ivory/85 backdrop-blur safe-top">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:py-4">
@@ -16,13 +22,44 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        <Link
-          href="/publier"
-          className="inline-flex items-center rounded-full bg-navy px-4 py-2 text-sm font-medium text-ivory transition hover:bg-navy-deep active:scale-[0.98]"
-        >
-          Publier
-        </Link>
+        <div className="flex items-center gap-2">
+          {authed ? (
+            <Link
+              href="/admin"
+              aria-label="Accès admin"
+              className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 bg-white px-3 py-2 text-sm font-medium text-ink-muted transition hover:border-ink/30 hover:text-ink"
+            >
+              <GearIcon />
+              <span className="hidden sm:inline">Admin</span>
+            </Link>
+          ) : null}
+          <Link
+            href="/publier"
+            className="inline-flex items-center rounded-full bg-navy px-4 py-2 text-sm font-medium text-ivory transition hover:bg-navy-deep active:scale-[0.98]"
+          >
+            Publier
+          </Link>
+        </div>
       </div>
     </header>
+  );
+}
+
+function GearIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
   );
 }

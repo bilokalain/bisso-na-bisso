@@ -9,7 +9,8 @@ export const metadata: Metadata = {
 };
 
 export default async function PublierPage() {
-  const enabled = await getEnabledModules();
+  const all = await getEnabledModules();
+  const enabled = all.filter((m) => m.contentType === "annonce");
 
   return (
     <section className="mx-auto max-w-3xl px-4 py-10 sm:py-16">

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { logoutAdmin } from "@/app/actions/admin-auth";
 import { moveModule, setModuleStatus } from "@/app/actions/admin-modules";
@@ -60,14 +61,22 @@ export default async function AdminDashboardPage() {
             visibles immédiatement sur le site public.
           </p>
         </div>
-        <form action={logoutAdmin}>
-          <button
-            type="submit"
-            className="rounded-full border border-ink/15 bg-ivory px-4 py-2 text-sm text-ink-muted transition hover:border-ink/30 hover:text-ink"
+        <div className="flex flex-col items-end gap-2">
+          <Link
+            href="/admin/guides"
+            className="rounded-full border border-ink/15 bg-ivory px-4 py-2 text-sm font-medium text-ink transition hover:border-ink/30"
           >
-            Déconnexion
-          </button>
-        </form>
+            Guides →
+          </Link>
+          <form action={logoutAdmin}>
+            <button
+              type="submit"
+              className="rounded-full border border-ink/15 bg-ivory px-4 py-2 text-sm text-ink-muted transition hover:border-ink/30 hover:text-ink"
+            >
+              Déconnexion
+            </button>
+          </form>
+        </div>
       </header>
 
       <div className="mt-8 grid grid-cols-3 gap-3 rounded-2xl border border-sand bg-ivory-deep p-4 text-center sm:gap-6 sm:p-6">

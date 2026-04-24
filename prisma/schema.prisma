@@ -106,3 +106,30 @@ model ModuleInterest {
   @@unique([moduleId, email])
   @@index([moduleId])
 }
+
+model Guide {
+  id             String       @id @default(cuid())
+  slug           String       @unique
+  title          String
+  tldr           String       // short summary shown on cards and top of detail
+  content        String       // Markdown body
+  category       String       // fiscalite | famille | logement | citoyennete | etudiant
+  heroImage      String?
+  readingMinutes Int          @default(5)
+  authorName     String?
+  status         GuideStatus  @default(DRAFT)
+  publishedAt    DateTime?
+  lastReviewedAt DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([status])
+  @@index([category])
+  @@index([publishedAt])
+}
+
+enum GuideStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}

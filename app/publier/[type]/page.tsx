@@ -22,6 +22,7 @@ export default async function PublierTypePage({ params }: Props) {
   const { type } = await params;
   const module = await getModuleByKey(type);
   if (!module) notFound();
+  if (module.contentType !== "annonce") notFound();
   if (module.status === "DISABLED") notFound();
   if (module.status === "COMING_SOON") redirect(`/bientot/${module.key}`);
 

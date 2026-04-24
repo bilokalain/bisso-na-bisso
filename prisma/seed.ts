@@ -410,9 +410,231 @@ async function syncModules() {
   }
 }
 
+type GuideSeed = {
+  slug: string;
+  title: string;
+  tldr: string;
+  content: string;
+  category: string;
+  heroImage?: string;
+  readingMinutes: number;
+  authorName?: string;
+};
+
+const GUIDE_SEEDS: GuideSeed[] = [
+  {
+    slug: "premiere-declaration-impots-belgique",
+    title: "Première déclaration d'impôts en Belgique",
+    category: "fiscalite",
+    readingMinutes: 7,
+    authorName: "Équipe Bisso",
+    heroImage: u("1554224155-8d04cb21cd6c"),
+    tldr:
+      "Entre avril et juin, tout résident doit déclarer ses revenus au SPF Finances via Tax-on-web. 30 minutes la première fois, zéro papier. Voici les étapes réelles.",
+    content: `## Ce qu'il te faut
+
+- Ta **carte d'identité belge** ou ton titre de séjour
+- Ton **numéro national** (au dos de la carte)
+- Ta **fiche fiscale 281.10** (envoyée en mars par ton employeur)
+- Tes **relevés bancaires** de l'année fiscale
+- Un **code itsme** ou un **lecteur de carte eID**
+
+## Les étapes
+
+### 1. Attends ta convocation
+Le SPF Finances t'envoie une **proposition de déclaration simplifiée** entre avril et mai. Soit par courrier, soit dans ta boîte e-Box si tu y es inscrit.
+
+### 2. Vérifie les chiffres
+Compare avec ta fiche 281.10 ligne par ligne. L'erreur la plus fréquente : des frais professionnels oubliés ou un job étudiant mal encodé.
+
+### 3. Déclare en ligne via Tax-on-web
+Va sur [financien.belgium.be](https://financien.belgium.be) et connecte-toi via **itsme**. Prévois 30 minutes la première fois, 10 minutes les années suivantes.
+
+### 4. Signe et archive
+Un accusé de réception PDF est généré. **Garde-le 7 ans** — l'administration peut te demander des justifs pendant tout ce temps.
+
+## Les pièges
+
+- **La proposition simplifiée** : 40 % contiennent au moins une erreur. Vérifie, même si c'est tentant de cliquer « accepter ».
+- **Frais forfaitaires vs réels** : si tu fais plus de 30 km aller-retour au boulot, ou si tu as payé une formation pro, les **frais réels** te font économiser plus.
+- **Compte à l'étranger** : obligatoire à déclarer, **dès 1 €**. Oublier = amende automatique.
+- **Enfants majeurs encore étudiants** : tu peux toujours les mettre à charge, souvent oublié.
+
+## Liens directs
+
+- Ta déclaration : [myminfin.be/taxonweb](https://financien.belgium.be/fr/E-services/Tax-on-web)
+- Info SPF Finances (FR) : **02 572 57 57**, 9h-17h du lundi au vendredi
+- Simulation d'impôt : [tax-calc.ccff02.minfin.fgov.be](https://tax-calc.ccff02.minfin.fgov.be)
+
+## Cas particulier : non-résident
+
+Si tu as des revenus belges mais que tu vis au Congo ou ailleurs, tu dois remplir une **déclaration non-résident** (formulaire différent, délai jusqu'en novembre). C'est plus complexe — à faire avec un comptable la première fois.
+`,
+  },
+  {
+    slug: "allocations-familiales-belgique",
+    title: "Allocations familiales : qui y a droit, combien, comment",
+    category: "famille",
+    readingMinutes: 5,
+    authorName: "Équipe Bisso",
+    heroImage: u("1503454537195-1dcabb73ffb9"),
+    tldr:
+      "Tout enfant qui vit en Belgique a droit aux allocations familiales, quelle que soit la situation des parents. Voici les montants, la démarche, et les avantages cachés pour familles nombreuses.",
+    content: `## Qui y a droit
+
+**Tout enfant qui habite en Belgique**, quelle que soit la nationalité des parents, et peu importe que tu travailles, étudies, sois au CPAS ou sans papiers en cours de régularisation (selon ton statut). Pas d'ancienneté requise.
+
+## Combien tu touches (2026, Région bruxelloise)
+
+- **1er enfant** : environ 184 € / mois
+- **2e enfant** : environ 184 € / mois
+- **3e enfant et suivants** : environ 184 € / mois + suppléments famille nombreuse
+- **Supplément social** si revenus modestes : +50 à 100 €
+- **Prime de rentrée scolaire** : 30 à 130 € en août, selon l'âge
+
+Les montants varient légèrement entre **Bruxelles (FAMIRIS)**, **Wallonie (AViQ/FAMIWAL)** et **Flandre (Groeipakket)**.
+
+## Comment faire la demande
+
+### 1. Choisir sa caisse
+Tu as le **libre choix** de la caisse d'allocations. Compare : certaines (Partena, Infino) ont de meilleurs délais que d'autres.
+
+### 2. Remplir le formulaire en ligne
+Sur le site de la caisse choisie. Tu devras fournir :
+
+- **Acte de naissance** de chaque enfant
+- **Composition de ménage** (à récupérer à la commune, 5 € environ)
+- Ton **contrat de travail** ou attestation ONEM
+
+### 3. Attendre 1 à 3 mois
+Les paiements sont **rétroactifs** à la date de naissance ou d'arrivée de l'enfant en Belgique. Tu ne perds rien.
+
+## Famille nombreuse — les avantages cachés
+
+Dès **3 enfants à charge** :
+
+- **Réduction SNCB** : -50 % sur tous les trajets en train (à demander en gare avec la composition de ménage)
+- **Réduction TEC/STIB/De Lijn** selon la région
+- **Allocation logement** supplémentaire dans certaines communes
+- **Avantage fiscal** : l'abattement grimpe significativement au 3e enfant
+
+Beaucoup de familles ne demandent jamais ces avantages. **Fais-le**.
+
+## Les pièges
+
+- **Changement de domicile** : préviens ta caisse sous 8 jours, sinon paiements suspendus.
+- **Enfant majeur étudiant** : les allocations continuent **jusqu'à 25 ans** s'il étudie. À certifier chaque année avec l'attestation d'inscription.
+- **Parents séparés** : l'allocation va au parent qui héberge l'enfant la majorité du temps. En cas de garde alternée, c'est négociable.
+
+## Liens directs
+
+- Bruxelles (FAMIRIS) : [famiris.brussels](https://famiris.brussels)
+- Wallonie (FAMIWAL) : [famiwal.be](https://famiwal.be)
+- Flandre (Groeipakket) : [groeipakket.be](https://groeipakket.be)
+`,
+  },
+  {
+    slug: "obtenir-nationalite-belge",
+    title: "Obtenir la nationalité belge : les 3 voies (et les pièges)",
+    category: "citoyennete",
+    readingMinutes: 8,
+    authorName: "Équipe Bisso",
+    heroImage: u("1586769852836-bc069f19e1b6"),
+    tldr:
+      "Trois voies légales selon ta situation : déclaration après 5 ans, naturalisation après 10 ans, ou par naissance/adoption. Chacune a ses conditions précises et ses pièges à éviter.",
+    content: `## Les 3 voies, en résumé
+
+| Voie | Durée de séjour | Intégration | Travail |
+|---|---|---|---|
+| **Déclaration (art. 12bis)** | 5 ans de séjour légal | Oui : langue + cours | Oui : 468 jours sur 5 ans |
+| **Naturalisation** | 10 ans de séjour légal | Oui | Pas obligatoire |
+| **Naissance / adoption** | — | — | — |
+
+La **déclaration** est la voie la plus utilisée. Plus rapide, mais plus de pièces à fournir.
+
+## Voie 1 : la déclaration après 5 ans (la plus utilisée)
+
+### Conditions
+
+1. **5 ans** de séjour légal et ininterrompu en Belgique
+2. **Connaissance de l'une des 3 langues** : français, néerlandais ou allemand (niveau A2 minimum)
+3. **Intégration sociale** : avoir suivi un parcours d'intégration OU être diplômé belge OU avoir travaillé
+4. **Participation économique** : avoir travaillé au moins **468 jours** dans les 5 dernières années (ou avoir payé des cotisations sociales comme indépendant)
+
+### Le dossier à monter
+
+- **Acte de naissance** (+ traduction par traducteur juré si en lingala, kikongo, etc.)
+- **Extrait de casier judiciaire** du pays d'origine (+ Belgique)
+- **Attestation de résidence** de la commune
+- **Certificat de langue** (ou diplôme qui en tient lieu)
+- **Preuves de travail** (fiches de paie, attestation ONEM)
+- **Attestation d'intégration** (Bruxelles : BAPA ; Wallonie : parcours ; Flandre : inburgering)
+
+### Délai et coût
+
+- **Coût** : 150 € (droit d'enregistrement)
+- **Délai** : 4 à 18 mois selon la commune et la complexité
+
+## Voie 2 : la naturalisation après 10 ans
+
+Pour ceux qui n'ont pas pu travailler 468 jours (maladie, congé parental long, études). Plus de flexibilité, mais c'est la **Chambre des représentants** qui décide, pas la commune. Les refus sont plus fréquents.
+
+## Voie 3 : par naissance ou adoption
+
+- **Né en Belgique d'un parent belge** : automatique
+- **Né en Belgique de parents étrangers** : sous conditions, voir la commune
+- **Adoption par un Belge** : automatique si enfant mineur
+
+## Les pièges qui font refuser le dossier
+
+- **Interruption de résidence** : un voyage de plus de 6 mois cassé ton compteur. Garde tes tickets d'avion et passeport à jour.
+- **Casier judiciaire étranger** : si tu n'arrives pas à l'obtenir, fais une **déclaration sur l'honneur** assistée par un avocat. Ne pas le mentionner = refus automatique.
+- **Intégration mal documentée** : garde **toutes** les attestations de cours, formations, bénévolat.
+- **Acte de naissance « différent »** : si ton acte du pays ne correspond pas au modèle belge, il faut passer par un **tribunal** pour le faire reconnaître. Compte 6 mois de plus.
+
+## Liens directs
+
+- Infos officielles : [belgium.be/fr/famille/international/belge](https://www.belgium.be/fr/famille/international/devenir_belge)
+- Formulaire : à retirer à ta commune (pas téléchargeable)
+- Ligne info SPF Justice : **02 542 65 11**
+
+## Besoin d'un humain ?
+
+Un **avocat en droit des étrangers** coûte entre 500 et 1500 € pour monter un dossier complet. Souvent rentable vu que ça évite les refus. Beaucoup d'avocats diaspora prennent en charge ce type de dossier — voir « Démarches administratives » sur Bisso.
+`,
+  },
+];
+
+async function syncGuides() {
+  for (const seed of GUIDE_SEEDS) {
+    const existing = await prisma.guide.findUnique({
+      where: { slug: seed.slug },
+    });
+    if (existing) continue; // never overwrite admin edits
+    await prisma.guide.create({
+      data: {
+        slug: seed.slug,
+        title: seed.title,
+        tldr: seed.tldr,
+        content: seed.content,
+        category: seed.category,
+        heroImage: seed.heroImage ?? null,
+        readingMinutes: seed.readingMinutes,
+        authorName: seed.authorName ?? null,
+        status: "PUBLISHED",
+        publishedAt: new Date(),
+      },
+    });
+  }
+}
+
 async function main() {
   // Modules are product config — keep admin edits, just ensure rows exist.
   await syncModules();
+
+  // Guides are editorial content — never overwrite once an admin has touched
+  // them, but make sure the starter set is present on a fresh DB.
+  await syncGuides();
 
   // Wipe existing annonces so the seed is idempotent in development.
   await prisma.annonce.deleteMany({});
@@ -432,11 +654,14 @@ async function main() {
     });
   }
 
-  const [annonceCount, moduleCount] = await Promise.all([
+  const [annonceCount, moduleCount, guideCount] = await Promise.all([
     prisma.annonce.count(),
     prisma.module.count(),
+    prisma.guide.count(),
   ]);
-  console.log(`Seeded ${moduleCount} modules and ${annonceCount} annonces.`);
+  console.log(
+    `Seeded ${moduleCount} modules, ${guideCount} guides and ${annonceCount} annonces.`,
+  );
 }
 
 main()

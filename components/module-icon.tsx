@@ -126,6 +126,13 @@ export function ModuleIcon({ name, className, size = 40 }: Props) {
           <rect width="20" height="14" x="2" y="6" rx="2" />
         </svg>
       );
+    case "compass":
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="10" />
+          <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" />
+        </svg>
+      );
     default:
       return (
         <svg {...common}>

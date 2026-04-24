@@ -23,6 +23,12 @@ export type ModuleFormProfile =
 
 export type ModuleStatus = "ENABLED" | "COMING_SOON" | "DISABLED";
 
+/**
+ * What kind of content a module holds. "annonce" = user-published ads that
+ * expire. "guide" = admin-curated, evergreen editorial pieces (Infos rapides).
+ */
+export type ModuleContentType = "annonce" | "guide";
+
 export type ModuleSpec = {
   key: string;
   label: string;
@@ -32,6 +38,7 @@ export type ModuleSpec = {
   color: ModuleColor;
   iconName: string;
   formProfile: ModuleFormProfile;
+  contentType: ModuleContentType;
   defaultStatus: ModuleStatus;
   defaultOrder: number;
 };
@@ -44,6 +51,20 @@ export type ModuleWithState = ModuleSpec & {
 
 export const MODULE_CATALOG: ModuleSpec[] = [
   {
+    key: "infos-rapides",
+    label: "Infos rapides",
+    labelLong: "Infos rapides",
+    tagline: "Les démarches, expliquées clairement.",
+    description:
+      "Fiscalité, allocations, premier achat, nationalité, études — des guides écrits par des membres de la communauté, sans jargon, à jour.",
+    color: "cobalt",
+    iconName: "compass",
+    formProfile: "standard",
+    contentType: "guide",
+    defaultStatus: "ENABLED",
+    defaultOrder: 5,
+  },
+  {
     key: "evenementiel",
     label: "Événementiel",
     labelLong: "Événementiel",
@@ -53,6 +74,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "forest",
     iconName: "party",
     formProfile: "evenementiel",
+    contentType: "annonce",
     defaultStatus: "ENABLED",
     defaultOrder: 10,
   },
@@ -66,6 +88,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "clay",
     iconName: "utensils",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "ENABLED",
     defaultOrder: 20,
   },
@@ -79,6 +102,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "terracotta",
     iconName: "plane",
     formProfile: "colis",
+    contentType: "annonce",
     defaultStatus: "ENABLED",
     defaultOrder: 30,
   },
@@ -92,6 +116,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "gold",
     iconName: "book",
     formProfile: "repetiteur",
+    contentType: "annonce",
     defaultStatus: "ENABLED",
     defaultOrder: 40,
   },
@@ -105,6 +130,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "cobalt",
     iconName: "wrench",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "ENABLED",
     defaultOrder: 50,
   },
@@ -118,6 +144,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "plum",
     iconName: "home",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "COMING_SOON",
     defaultOrder: 60,
   },
@@ -131,6 +158,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "rose",
     iconName: "sparkles",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "COMING_SOON",
     defaultOrder: 70,
   },
@@ -144,6 +172,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "sky",
     iconName: "baby",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "COMING_SOON",
     defaultOrder: 80,
   },
@@ -157,6 +186,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "graphite",
     iconName: "file-document",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "COMING_SOON",
     defaultOrder: 90,
   },
@@ -170,6 +200,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "gold",
     iconName: "church",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "COMING_SOON",
     defaultOrder: 100,
   },
@@ -183,6 +214,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "graphite",
     iconName: "tag",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "DISABLED",
     defaultOrder: 110,
   },
@@ -196,6 +228,7 @@ export const MODULE_CATALOG: ModuleSpec[] = [
     color: "plum",
     iconName: "briefcase",
     formProfile: "standard",
+    contentType: "annonce",
     defaultStatus: "DISABLED",
     defaultOrder: 120,
   },

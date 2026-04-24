@@ -36,6 +36,10 @@ export default async function ListingPage({ params, searchParams }: Props) {
   const { type } = await params;
   const module = await getModuleByKey(type);
   if (!module || module.status === "DISABLED") notFound();
+  // Guide modules have their own static routes — the dynamic [type] segment
+  // should never handle them. 404 defensively in case the static route is
+  // removed.
+  if (module.contentType !== "annonce") notFound();
   if (module.status === "COMING_SOON") redirect(`/bientot/${module.key}`);
 
   const sp = await searchParams;

@@ -304,7 +304,7 @@ export function PublierForm({ type, formProfile, color }: Props) {
 }
 
 const inputCls =
-  "block w-full rounded-xl border border-sand bg-ivory px-4 py-3 text-base text-ink placeholder:text-ink-subtle focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/20";
+  "block w-full rounded-xl border border-sand bg-ivory px-4 py-3 text-base text-ink placeholder:text-ink-subtle focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20";
 
 const PLACEHOLDERS: Record<string, { titre: string; description: string }> = {
   evenementiel: {

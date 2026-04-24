@@ -23,8 +23,8 @@ export function InterestForm({ moduleKey, color }: Props) {
 
   if (state.status === "success") {
     return (
-      <div className="rounded-2xl border border-forest/20 bg-forest-soft p-5 sm:p-6">
-        <p className="font-display text-lg font-semibold text-forest-deep">
+      <div className="rounded-2xl border border-navy/20 bg-navy-soft p-5 sm:p-6">
+        <p className="font-display text-lg font-semibold text-navy-deep">
           {state.message}
         </p>
         <p className="mt-1 text-sm text-ink-muted">

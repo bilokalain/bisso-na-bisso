@@ -158,7 +158,7 @@ export function GuideForm({ mode, guideId, defaults = {} }: Props) {
         <button
           type="submit"
           disabled={pending}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-forest px-6 py-3 text-base font-medium text-ivory shadow-card transition hover:bg-forest-deep active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-6 py-3 text-base font-medium text-ivory shadow-card transition hover:bg-navy-deep active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
         >
           {pending
             ? "Enregistrement…"
@@ -172,7 +172,7 @@ export function GuideForm({ mode, guideId, defaults = {} }: Props) {
 }
 
 const inputCls =
-  "block w-full rounded-xl border border-sand bg-ivory px-4 py-3 text-base text-ink placeholder:text-ink-subtle focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/20";
+  "block w-full rounded-xl border border-sand bg-ivory px-4 py-3 text-base text-ink placeholder:text-ink-subtle focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20";
 
 function Field({
   label,

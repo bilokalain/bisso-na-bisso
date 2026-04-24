@@ -24,9 +24,9 @@ export function PublishedBanner({ path }: Props) {
 
   return (
     <div className="mx-auto mt-6 max-w-4xl px-4">
-      <div className="flex flex-col gap-3 rounded-2xl border border-forest/20 bg-forest-soft p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-5">
+      <div className="flex flex-col gap-3 rounded-2xl border border-navy/20 bg-navy-soft p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-5">
         <div className="flex-1">
-          <p className="font-display text-lg font-semibold text-forest-deep">
+          <p className="font-display text-lg font-semibold text-navy-deep">
             Ton annonce est en ligne.
           </p>
           <p className="mt-1 text-sm text-ink-muted">
@@ -37,7 +37,7 @@ export function PublishedBanner({ path }: Props) {
         <button
           type="button"
           onClick={copy}
-          className="inline-flex items-center justify-center gap-2 rounded-full bg-forest px-4 py-2.5 text-sm font-medium text-ivory transition hover:bg-forest-deep active:scale-[0.98]"
+          className="inline-flex items-center justify-center gap-2 rounded-full bg-navy px-4 py-2.5 text-sm font-medium text-ivory transition hover:bg-navy-deep active:scale-[0.98]"
         >
           {copied ? "Lien copié ✓" : "Copier le lien"}
         </button>

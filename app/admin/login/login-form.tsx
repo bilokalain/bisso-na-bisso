@@ -23,7 +23,7 @@ export function LoginForm() {
           required
           autoFocus
           autoComplete="current-password"
-          className="block w-full rounded-xl border border-sand bg-ivory px-4 py-3 text-base text-ink placeholder:text-ink-subtle focus:border-forest focus:outline-none focus:ring-2 focus:ring-forest/20"
+          className="block w-full rounded-xl border border-sand bg-ivory px-4 py-3 text-base text-ink placeholder:text-ink-subtle focus:border-navy focus:outline-none focus:ring-2 focus:ring-navy/20"
         />
       </label>
 
@@ -34,7 +34,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-forest px-5 py-3 text-base font-medium text-ivory shadow-card transition hover:bg-forest-deep active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-navy px-5 py-3 text-base font-medium text-ivory shadow-card transition hover:bg-navy-deep active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {pending ? "Connexion…" : "Se connecter"}
       </button>

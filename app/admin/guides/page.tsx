@@ -48,7 +48,7 @@ export default async function AdminGuidesPage() {
         </div>
         <Link
           href="/admin/guides/new"
-          className="inline-flex items-center rounded-full bg-forest px-4 py-2 text-sm font-medium text-ivory shadow-card transition hover:bg-forest-deep"
+          className="inline-flex items-center rounded-full bg-navy px-4 py-2 text-sm font-medium text-ivory shadow-card transition hover:bg-navy-deep"
         >
           + Nouveau guide
         </Link>

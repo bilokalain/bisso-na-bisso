@@ -134,8 +134,8 @@ export default async function GuidePage({ params }: Props) {
       ) : null}
 
       <section className="mx-auto mt-10 max-w-3xl px-4">
-        <div className="rounded-2xl border border-forest/20 bg-forest-soft p-5 sm:p-6">
-          <p className="text-xs font-medium uppercase tracking-wider text-forest-deep">
+        <div className="rounded-2xl border border-navy/20 bg-navy-soft p-5 sm:p-6">
+          <p className="text-xs font-medium uppercase tracking-wider text-navy-deep">
             En 30 secondes
           </p>
           <p className="mt-2 text-base leading-relaxed text-ink sm:text-lg">

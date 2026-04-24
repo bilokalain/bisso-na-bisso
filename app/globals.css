@@ -14,6 +14,13 @@
   --color-forest-deep: #123f2a;
   --color-forest-soft: #e8efe9;
 
+  /* Brand primary — matches the navy in the logo. Used for site chrome
+     (header, primary CTAs, PWA theme, focus states). Forest stays as the
+     Événementiel module's identity colour. */
+  --color-navy: #1d2e5e;
+  --color-navy-deep: #111f44;
+  --color-navy-soft: #e8ecf3;
+
   --color-terracotta: #c85a3b;
   --color-terracotta-deep: #a44529;
   --color-terracotta-soft: #fbe4db;

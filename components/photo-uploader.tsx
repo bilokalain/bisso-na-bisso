@@ -250,7 +250,7 @@ function ThumbFlight({
       />
       <div className="absolute inset-x-2 bottom-2 h-1.5 overflow-hidden rounded-full bg-ivory/60">
         <div
-          className="h-full rounded-full bg-forest transition-all"
+          className="h-full rounded-full bg-navy transition-all"
           style={{ width: `${progress}%` }}
         />
       </div>

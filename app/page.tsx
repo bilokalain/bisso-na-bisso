@@ -39,8 +39,7 @@ function Hero() {
               Diaspora · Belgique
             </span>
             <h1 className="mt-5 font-display text-5xl font-semibold leading-[1.02] tracking-tight text-ink sm:text-6xl md:text-7xl">
-              Entre nous,{" "}
-              <span className="italic text-forest">pour nous.</span>
+              Entre <span className="italic text-navy">nous.</span>
             </h1>
             {/* Hero image — on mobile it breaks here between title and body
                 copy, sitting literally "after" the H1 as requested. On
@@ -57,7 +56,7 @@ function Hero() {
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Link
                 href="/publier"
-                className="inline-flex items-center gap-2 rounded-full bg-forest px-6 py-3 text-base font-medium text-ivory shadow-card transition hover:bg-forest-deep active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-full bg-navy px-6 py-3 text-base font-medium text-ivory shadow-card transition hover:bg-navy-deep active:scale-[0.98]"
               >
                 Publier une annonce
                 <ArrowRight />
@@ -216,7 +215,7 @@ function HowItWorks() {
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-10">
           {steps.map((s) => (
             <div key={s.n}>
-              <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink/15 font-display text-lg font-semibold text-forest">
+              <div className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-full border border-ink/15 font-display text-lg font-semibold text-navy">
                 {s.n}
               </div>
               <h3 className="font-display text-xl font-semibold tracking-tight">
@@ -279,7 +278,7 @@ function CheckDot() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-forest"
+      className="text-navy"
       aria-hidden
     >
       <circle cx="12" cy="12" r="10" />

@@ -45,6 +45,7 @@ const CATEGORY_TO_MODULES: Record<string, string[]> = {
   citoyennete: ["demarches"],
   etudiant: ["repetiteur", "logement", "petits-boulots"],
   pratique: ["demarches", "petits-boulots"],
+  travail: ["petits-boulots", "demarches", "repetiteur"],
 };
 
 export default async function GuidePage({ params }: Props) {

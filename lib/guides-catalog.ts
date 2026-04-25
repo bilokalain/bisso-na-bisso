@@ -56,6 +56,13 @@ export const GUIDE_CATEGORIES: GuideCategory[] = [
     iconName: "compass",
     color: "cobalt",
   },
+  {
+    value: "travail",
+    label: "Travail",
+    blurb: "Contrats, chômage, fiche de paie, indépendant, droits.",
+    iconName: "briefcase",
+    color: "graphite",
+  },
 ];
 
 export function guideCategoryLabel(value: string): string {

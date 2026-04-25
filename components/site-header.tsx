@@ -27,10 +27,10 @@ export async function SiteHeader() {
             <Link
               href="/admin"
               aria-label="Accès admin"
-              className="inline-flex items-center gap-1.5 rounded-full border border-ink/15 bg-white px-3 py-2 text-sm font-medium text-ink-muted transition hover:border-ink/30 hover:text-ink"
+              className="inline-flex items-center gap-1.5 rounded-full border border-navy/30 bg-navy-soft px-3 py-2 text-sm font-medium text-navy-deep transition hover:border-navy hover:bg-navy hover:text-ivory"
             >
               <GearIcon />
-              <span className="hidden sm:inline">Admin</span>
+              <span>Admin</span>
             </Link>
           ) : null}
           <Link
